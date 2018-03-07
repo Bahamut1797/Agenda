@@ -1111,7 +1111,7 @@ var routes = [{
   components: {
     remindersIndex: __WEBPACK_IMPORTED_MODULE_1__components_reminders_RemindersIndex_vue___default.a
   }
-}, { path: '/admin/reminders/create', component: __WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersCreate_vue___default.a, name: 'createReminder' }, { path: '/admin/reminders/edit/:id', component: __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersEdit_vue___default.a, name: 'editReminder' }];
+}, { path: '/create', component: __WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersCreate_vue___default.a, name: 'createReminder' }, { path: '/edit/:id', component: __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersEdit_vue___default.a, name: 'editReminder' }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_0_vue_router__["a" /* default */]({ routes: routes });
 

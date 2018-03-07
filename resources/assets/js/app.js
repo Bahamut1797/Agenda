@@ -23,8 +23,8 @@ const routes = [
             remindersIndex: RemindersIndex
         }
     },
-    {path: '/admin/reminders/create', component: RemindersCreate, name: 'createReminder'},
-    {path: '/admin/reminders/edit/:id', component: RemindersEdit, name: 'editReminder'},
+    {path: '/create', component: RemindersCreate, name: 'createReminder'},
+    {path: '/edit/:id', component: RemindersEdit, name: 'editReminder'},
 ]
  
 const router = new VueRouter({ routes })
