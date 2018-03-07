@@ -22,7 +22,7 @@
                         <td>{{ reminder.title }}</td>
                         <td>{{ reminder.amount }}</td>
                         <td>{{ reminder.location }}</td>
-                        <td>{{ reminder.date }} - {{ reminder.time }}</td>
+                        <td>{{ reminder.alarmDate }} - {{ reminder.alarmTime }}</td>
                         <td>
                             <router-link :to="{name: 'editReminder', params: {id: reminder.id}}" class="btn btn-xs btn-default">
                                 Edit

@@ -20,7 +20,7 @@ const routes = [
     {
         path: '/',
         components: {
-            RemindersIndex: RemindersIndex
+            remindersIndex: RemindersIndex
         }
     },
     {path: '/admin/reminders/create', component: RemindersCreate, name: 'createReminder'},

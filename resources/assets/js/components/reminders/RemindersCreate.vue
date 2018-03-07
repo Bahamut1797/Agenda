@@ -11,7 +11,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Reminder title</label>
-                            <input type="text" v-model="reminder.title" class="form-control">
+                            <input type="text" required v-model="reminder.title" class="form-control">
                         </div>
                     </div>
                     <div class="row">
@@ -22,8 +22,8 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Reminder amount</label>
-                            <input type="number" v-model="reminder.amount" class="form-control">
+                            <label class="control-label">Amount</label>
+                            <input type="number" required min="0" step=".01" v-model="reminder.amount" class="form-control">
                         </div>
                     </div>
                     <div class="row">
@@ -35,7 +35,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Frecuency</label>
-                            <input type="text" v-model="reminder.frecuency" class="form-control">
+                            <input type="text" required v-model="reminder.frecuency" class="form-control">
                         </div>
                     </div>
                     <div class="row">
@@ -53,7 +53,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Alarm Time</label>
-                            <input type="time" v-model="reminder.alarmTime" class="form-control">
+                            <input type="time" required v-model="reminder.alarmTime" class="form-control">
                         </div>
                     </div>
                     <div class="row">

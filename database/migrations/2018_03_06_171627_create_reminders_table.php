@@ -17,7 +17,7 @@ class CreateRemindersTable extends Migration
             $table->increments('id');
             $table->string('title', 255);
             $table->boolean('isPayment');
-            $table->unsignedInteger('amount')->nullable();
+            $table->double('amount')->nullable();
             $table->string('location', 1000)->nullable();
             $table->string('frecuency', 256); // once, certain days, certain date, every month
             $table->boolean('repeat');

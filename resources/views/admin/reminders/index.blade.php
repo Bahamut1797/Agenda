@@ -7,7 +7,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Recodatorios Activos</div>
 
-                <div class="panel-body">
+                <div class="panel-body table-responsive">
                     <router-view name="remindersIndex"></router-view>
                     <router-view></router-view>
                 </div>

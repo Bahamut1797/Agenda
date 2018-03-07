@@ -18,5 +18,5 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::group(['prefix' => '/v1', 'namespace' => 'Api\V1', 'as' => 'api.'], function () {
-    Route::resource('reminders', 'remindersController', ['except' => ['create', 'edit']]);
+    Route::resource('reminders', 'RemindersController', ['except' => ['create', 'edit']]);
 });
