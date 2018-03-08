@@ -15,13 +15,11 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-4 form-group">
                             <label class="control-label">Is a Payment?</label>
-                            <input type="checkbox" v-model="reminder.isPayment" class="form-control">
+                            <input type="checkbox" v-model="reminder.isPayment">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-8 form-group">
                             <label class="control-label">Amount</label>
                             <input type="number" required min="0" step=".01" v-model="reminder.amount" class="form-control">
                         </div>
@@ -39,19 +37,17 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-6 form-group">
                             <label class="control-label">Repeat</label>
-                            <input type="checkbox" v-model="reminder.repeat" class="form-control">
+                            <input type="checkbox" v-model="reminder.repeat">
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-6 form-group">
                             <label class="control-label">Alarm Date</label>
                             <input type="date" v-model="reminder.alarmDate" class="form-control">
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-6 form-group">
                             <label class="control-label">Alarm Time</label>
                             <input type="time" required v-model="reminder.alarmTime" class="form-control">
                         </div>
@@ -59,7 +55,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Delete it when finished?</label>
-                            <input type="checkbox" v-model="reminder.deleteIt" class="form-control">
+                            <input type="checkbox" v-model="reminder.deleteIt">
                         </div>
                     </div>
                     <div class="row">

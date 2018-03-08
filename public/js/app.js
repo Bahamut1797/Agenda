@@ -46022,10 +46022,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -46127,7 +46123,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("div", { staticClass: "col-xs-4 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Is a Payment?")
                 ]),
@@ -46141,7 +46137,6 @@ var render = function() {
                       expression: "reminder.isPayment"
                     }
                   ],
-                  staticClass: "form-control",
                   attrs: { type: "checkbox" },
                   domProps: {
                     checked: Array.isArray(_vm.reminder.isPayment)
@@ -46171,11 +46166,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-8 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Amount")
                 ]),
@@ -46270,7 +46263,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Repeat")
                 ]),
@@ -46284,7 +46277,6 @@ var render = function() {
                       expression: "reminder.repeat"
                     }
                   ],
-                  staticClass: "form-control",
                   attrs: { type: "checkbox" },
                   domProps: {
                     checked: Array.isArray(_vm.reminder.repeat)
@@ -46317,7 +46309,7 @@ var render = function() {
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Alarm Date")
                 ]),
@@ -46343,11 +46335,9 @@ var render = function() {
                     }
                   }
                 })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Alarm Time")
                 ]),
@@ -46391,7 +46381,6 @@ var render = function() {
                       expression: "reminder.deleteIt"
                     }
                   ],
-                  staticClass: "form-control",
                   attrs: { type: "checkbox" },
                   domProps: {
                     checked: Array.isArray(_vm.reminder.deleteIt)
