@@ -16,7 +16,9 @@ class RemindersController extends Controller
     public function index()
     {
         //
-        return Reminder::all();
+        return Reminder::orderBy('alarmDate', 'ASC')
+                        ->orderBy('alarmTime', 'ASC')
+                        ->get();
     }
 
     /**
