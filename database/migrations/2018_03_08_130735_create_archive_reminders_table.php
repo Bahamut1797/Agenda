@@ -16,7 +16,7 @@ class CreateArchiveRemindersTable extends Migration
         Schema::create('archive_reminders', function (Blueprint $table) {
             $table->increments('id');
             $table->string('title', 255);
-            $table->unsignInteger('category')->default(1);
+            $table->unsignedInteger('category')->default(1);
             $table->boolean('isPayment');
             $table->double('amount')->nullable();
             $table->string('location', 1000)->nullable();
