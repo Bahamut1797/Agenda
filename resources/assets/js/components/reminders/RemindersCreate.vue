@@ -9,9 +9,17 @@
             <div class="panel-body">
                 <form v-on:submit="saveForm()">
                     <div class="row">
-                        <div class="col-xs-12 form-group">
+                        <div class="col-xs-6 form-group">
                             <label class="control-label">Reminder title</label>
                             <input type="text" required v-model="reminder.title" class="form-control">
+                        </div>
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label">Category</label>
+                             <select v-model="reminder.category" class="form-control" >
+                                <option v-for="category in categories" v-bind:value="category.id">
+                                    {{ category.name }}
+                                </option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -75,6 +83,7 @@
             return {
                 reminder: {
                     title: '',
+                    category: 1,
                     isPayment: false,
                     amount: null,
                     location: null,
@@ -83,8 +92,21 @@
                     alarmDate: null,
                     alarmTime: '',
                     deleteIt: false,
-                }
+                },
+                categories: []
             }
+        },
+        mounted() {
+            var app = this;
+            axios.get('/api/v1/categories')
+                .then(function (resp) {
+                    app.categories = resp.data;
+                    //console.log(app.categories);
+                })
+                .catch(function (resp) {
+                    console.log(resp);
+                    alert("Could not load categories");
+                });
         },
         methods: {
             saveForm() {

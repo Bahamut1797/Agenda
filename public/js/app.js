@@ -46022,12 +46022,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             reminder: {
                 title: '',
+                category: 1,
                 isPayment: false,
                 amount: null,
                 location: null,
@@ -46036,9 +46045,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alarmDate: null,
                 alarmTime: '',
                 deleteIt: false
-            }
+            },
+            categories: []
         };
     },
+    mounted: function mounted() {
+        var app = this;
+        axios.get('/api/v1/categories').then(function (resp) {
+            app.categories = resp.data;
+            //console.log(app.categories);
+        }).catch(function (resp) {
+            console.log(resp);
+            alert("Could not load categories");
+        });
+    },
+
     methods: {
         saveForm: function saveForm() {
             event.preventDefault();
@@ -46093,7 +46114,7 @@ var render = function() {
           },
           [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Reminder title")
                 ]),
@@ -46119,6 +46140,55 @@ var render = function() {
                     }
                   }
                 })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
+                _c("label", { staticClass: "control-label" }, [
+                  _vm._v("Category")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.reminder.category,
+                        expression: "reminder.category"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    on: {
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.reminder,
+                          "category",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
+                    }
+                  },
+                  _vm._l(_vm.categories, function(category) {
+                    return _c("option", { domProps: { value: category.id } }, [
+                      _vm._v(
+                        "\n                                " +
+                          _vm._s(category.name) +
+                          "\n                            "
+                      )
+                    ])
+                  })
+                )
               ])
             ]),
             _vm._v(" "),
