@@ -46030,6 +46030,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -46062,7 +46068,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     methods: {
         saveForm: function saveForm() {
-            event.preventDefault();
             var app = this;
             var newReminder = app.reminder;
             axios.post('/api/v1/reminders', newReminder).then(function (resp) {
@@ -46071,6 +46076,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(resp);
                 alert("Could not create your reminder");
             });
+        },
+        addCategory: function addCategory() {
+            alert("");
+        },
+        deleteCategory: function deleteCategory() {
+            alert("");
         }
     }
 });
@@ -46108,13 +46119,14 @@ var render = function() {
           {
             on: {
               submit: function($event) {
+                $event.preventDefault()
                 _vm.saveForm()
               }
             }
           },
           [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-6 form-group" }, [
+              _c("div", { staticClass: "col-xs-7 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Reminder title")
                 ]),
@@ -46142,7 +46154,7 @@ var render = function() {
                 })
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-xs-6 form-group" }, [
+              _c("div", { staticClass: "col-xs-5 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Category")
                 ]),
@@ -46188,6 +46200,48 @@ var render = function() {
                       )
                     ])
                   })
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.addCategory()
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: "/open-iconic/svg/plus.svg",
+                        alt: "add category"
+                      }
+                    })
+                  ]
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                        _vm.deleteCategory()
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: "/open-iconic/svg/trash.svg",
+                        alt: "delete category"
+                      }
+                    })
+                  ]
                 )
               ])
             ]),
@@ -46496,7 +46550,11 @@ var staticRenderFns = [
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Create")])
+        _c(
+          "button",
+          { staticClass: "btn btn-success", attrs: { type: "submit" } },
+          [_vm._v("Create")]
+        )
       ])
     ])
   }

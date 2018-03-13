@@ -7,19 +7,25 @@
         <div class="panel panel-default">
             <div class="panel-heading">Create new reminder</div>
             <div class="panel-body">
-                <form v-on:submit="saveForm()">
+                <form v-on:submit.prevent="saveForm()">
                     <div class="row">
-                        <div class="col-xs-6 form-group">
+                        <div class="col-xs-7 form-group">
                             <label class="control-label">Reminder title</label>
                             <input type="text" required v-model="reminder.title" class="form-control">
                         </div>
-                        <div class="col-xs-6 form-group">
+                        <div class="col-xs-5 form-group">
                             <label class="control-label">Category</label>
-                             <select v-model="reminder.category" class="form-control" >
+                            <select v-model="reminder.category" class="form-control" >
                                 <option v-for="category in categories" v-bind:value="category.id">
                                     {{ category.name }}
                                 </option>
                             </select>
+                            <button class="btn btn-default" v-on:click.prevent="addCategory()" >
+                               <img src="/open-iconic/svg/plus.svg" alt="add category" />
+                            </button>
+                            <button class="btn btn-default" v-on:click.prevent="deleteCategory()" >
+                               <img src="/open-iconic/svg/trash.svg" alt="delete category" />
+                            </button>
                         </div>
                     </div>
                     <div class="row">
@@ -68,7 +74,7 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <button class="btn btn-success">Create</button>
+                            <button type="submit" class="btn btn-success">Create</button>
                         </div>
                     </div>
                 </form>
@@ -110,7 +116,6 @@
         },
         methods: {
             saveForm() {
-                event.preventDefault();
                 var app = this;
                 var newReminder = app.reminder;
                 axios.post('/api/v1/reminders', newReminder)
@@ -121,6 +126,12 @@
                         console.log(resp);
                         alert("Could not create your reminder");
                     });
+            },
+            addCategory() {
+                alert("");
+            },
+            deleteCategory() {
+                alert("");
             }
         }
     }
