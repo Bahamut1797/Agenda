@@ -46052,7 +46052,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alarmTime: '',
                 deleteIt: false
             },
-            categories: []
+            categories: [],
+            objIdx: 0
         };
     },
     mounted: function mounted() {
@@ -46080,8 +46081,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         addCategory: function addCategory() {
             alert("");
         },
-        deleteCategory: function deleteCategory() {
-            alert("");
+        handleChange: function handleChange(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.objIdx = e.target.options.selectedIndex;
+            }
+        },
+        deleteCategory: function deleteCategory(id) {
+            var app = this;
+            if (confirm("Do you really want to delete " + app.categories[app.objIdx].name + " category?")) {
+                axios.delete('/api/v1/categories/' + id).then(function (resp) {
+                    app.categories.splice(objIdx, 1);
+                }).catch(function (resp) {
+                    alert("Could not delete category");
+                });
+            }
         }
     }
 });
@@ -46172,23 +46185,26 @@ var render = function() {
                     ],
                     staticClass: "form-control",
                     on: {
-                      change: function($event) {
-                        var $$selectedVal = Array.prototype.filter
-                          .call($event.target.options, function(o) {
-                            return o.selected
-                          })
-                          .map(function(o) {
-                            var val = "_value" in o ? o._value : o.value
-                            return val
-                          })
-                        _vm.$set(
-                          _vm.reminder,
-                          "category",
-                          $event.target.multiple
-                            ? $$selectedVal
-                            : $$selectedVal[0]
-                        )
-                      }
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.reminder,
+                            "category",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        _vm.handleChange
+                      ]
                     }
                   },
                   _vm._l(_vm.categories, function(category) {
@@ -46230,7 +46246,7 @@ var render = function() {
                     on: {
                       click: function($event) {
                         $event.preventDefault()
-                        _vm.deleteCategory()
+                        _vm.deleteCategory(_vm.reminder.category)
                       }
                     }
                   },

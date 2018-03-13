@@ -15,15 +15,15 @@
                         </div>
                         <div class="col-xs-5 form-group">
                             <label class="control-label">Category</label>
-                            <select v-model="reminder.category" class="form-control" >
-                                <option v-for="category in categories" v-bind:value="category.id">
+                            <select v-on:change="handleChange" v-model="reminder.category" class="form-control" >
+                                <option v-for="category in categories" v-bind:value="category.id" >
                                     {{ category.name }}
                                 </option>
                             </select>
                             <button class="btn btn-default" v-on:click.prevent="addCategory()" >
                                <img src="/open-iconic/svg/plus.svg" alt="add category" />
                             </button>
-                            <button class="btn btn-default" v-on:click.prevent="deleteCategory()" >
+                            <button class="btn btn-default" v-on:click.prevent="deleteCategory(reminder.category)" >
                                <img src="/open-iconic/svg/trash.svg" alt="delete category" />
                             </button>
                         </div>
@@ -99,7 +99,8 @@
                     alarmTime: '',
                     deleteIt: false,
                 },
-                categories: []
+                categories: [],
+                objIdx: 0
             }
         },
         mounted() {
@@ -130,8 +131,22 @@
             addCategory() {
                 alert("");
             },
-            deleteCategory() {
-                alert("");
+            handleChange(e) {
+                if(e.target.options.selectedIndex > -1) {
+                    this.objIdx = e.target.options.selectedIndex;
+                }
+            },
+            deleteCategory(id) {
+                var app = this;
+                if (confirm("Do you really want to delete " + app.categories[app.objIdx].name + " category?")) {
+                    axios.delete('/api/v1/categories/' + id)
+                        .then(function (resp) {
+                            app.categories.splice(objIdx, 1);
+                        })
+                        .catch(function (resp) {
+                            alert("Could not delete category");
+                        });
+                }
             }
         }
     }
