@@ -14,17 +14,17 @@
                             <input type="text" required v-model="reminder.title" class="form-control">
                         </div>
                         <div class="col-xs-5 form-group">
-                            <label class="control-label">Category</label>
-                            <select v-on:change="handleChange" v-model="reminder.category" class="form-control" >
+                            <label class="control-label" style="display:block;" >Category</label>
+                            <select v-on:change="handleChange" v-model="reminder.category" class="form-control" style="width:70%; display:unset;" >
                                 <option v-for="category in categories" v-bind:value="category.id" >
                                     {{ category.name }}
                                 </option>
                             </select>
-                            <button class="btn btn-default" v-on:click.prevent="addCategory()" >
-                               <img src="/open-iconic/svg/plus.svg" alt="add category" />
+                            <button class="btn btn-default" style="border:none; padding:4px;" v-on:click.prevent="addCategory()" >
+                               <img src="/open-iconic/svg/plus.svg" width="15" alt="add category" />
                             </button>
-                            <button class="btn btn-default" v-on:click.prevent="deleteCategory(reminder.category)" >
-                               <img src="/open-iconic/svg/trash.svg" alt="delete category" />
+                            <button v-if="reminder.category > 1" class="btn btn-default" style="border:none; padding:4px;" v-on:click.prevent="deleteCategory()" >
+                               <img src="/open-iconic/svg/trash.svg" width="15" alt="delete category" />
                             </button>
                         </div>
                     </div>
@@ -136,12 +136,15 @@
                     this.objIdx = e.target.options.selectedIndex;
                 }
             },
-            deleteCategory(id) {
+            deleteCategory() {
                 var app = this;
-                if (confirm("Do you really want to delete " + app.categories[app.objIdx].name + " category?")) {
+                var name = app.categories[app.objIdx].name;
+                var id = app.categories[app.objIdx].id;
+                if (confirm("Do you really want to delete " + name + " category?")) {
                     axios.delete('/api/v1/categories/' + id)
                         .then(function (resp) {
-                            app.categories.splice(objIdx, 1);
+                            app.categories.splice(app.objIdx, 1);
+                            app.reminder.category = 1;
                         })
                         .catch(function (resp) {
                             alert("Could not delete category");

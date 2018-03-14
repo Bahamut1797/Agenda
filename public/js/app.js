@@ -46086,11 +46086,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 this.objIdx = e.target.options.selectedIndex;
             }
         },
-        deleteCategory: function deleteCategory(id) {
+        deleteCategory: function deleteCategory() {
             var app = this;
-            if (confirm("Do you really want to delete " + app.categories[app.objIdx].name + " category?")) {
+            var name = app.categories[app.objIdx].name;
+            var id = app.categories[app.objIdx].id;
+            if (confirm("Do you really want to delete " + name + " category?")) {
                 axios.delete('/api/v1/categories/' + id).then(function (resp) {
-                    app.categories.splice(objIdx, 1);
+                    app.categories.splice(app.objIdx, 1);
+                    app.reminder.category = 1;
                 }).catch(function (resp) {
                     alert("Could not delete category");
                 });
@@ -46168,9 +46171,14 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-xs-5 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Category")
-                ]),
+                _c(
+                  "label",
+                  {
+                    staticClass: "control-label",
+                    staticStyle: { display: "block" }
+                  },
+                  [_vm._v("Category")]
+                ),
                 _vm._v(" "),
                 _c(
                   "select",
@@ -46184,6 +46192,7 @@ var render = function() {
                       }
                     ],
                     staticClass: "form-control",
+                    staticStyle: { width: "70%", display: "unset" },
                     on: {
                       change: [
                         function($event) {
@@ -46222,6 +46231,7 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-default",
+                    staticStyle: { border: "none", padding: "4px" },
                     on: {
                       click: function($event) {
                         $event.preventDefault()
@@ -46233,32 +46243,37 @@ var render = function() {
                     _c("img", {
                       attrs: {
                         src: "/open-iconic/svg/plus.svg",
+                        width: "15",
                         alt: "add category"
                       }
                     })
                   ]
                 ),
                 _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "btn btn-default",
-                    on: {
-                      click: function($event) {
-                        $event.preventDefault()
-                        _vm.deleteCategory(_vm.reminder.category)
-                      }
-                    }
-                  },
-                  [
-                    _c("img", {
-                      attrs: {
-                        src: "/open-iconic/svg/trash.svg",
-                        alt: "delete category"
-                      }
-                    })
-                  ]
-                )
+                _vm.reminder.category > 1
+                  ? _c(
+                      "button",
+                      {
+                        staticClass: "btn btn-default",
+                        staticStyle: { border: "none", padding: "4px" },
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            _vm.deleteCategory()
+                          }
+                        }
+                      },
+                      [
+                        _c("img", {
+                          attrs: {
+                            src: "/open-iconic/svg/trash.svg",
+                            width: "15",
+                            alt: "delete category"
+                          }
+                        })
+                      ]
+                    )
+                  : _vm._e()
               ])
             ]),
             _vm._v(" "),
