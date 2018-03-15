@@ -15,6 +15,7 @@ class CreateArchiveRemindersTable extends Migration
     {
         Schema::create('archive_reminders', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('userId');
             $table->string('title', 255);
             $table->unsignedInteger('category')->default(1);
             $table->boolean('isPayment');
@@ -24,7 +25,8 @@ class CreateArchiveRemindersTable extends Migration
             $table->date('alarmDate')->nullable();
             $table->time('alarmTime');
             $table->timestamps();
-            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');;
+            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 

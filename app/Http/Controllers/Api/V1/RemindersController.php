@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Reminder;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Auth;
 
 class RemindersController extends Controller
 {
@@ -16,7 +17,9 @@ class RemindersController extends Controller
     public function index()
     {
         //
-        return Reminder::orderBy('alarmDate', 'ASC')
+        $userID = Auth::user()->id;
+        return Reminder::where('userId', $userID)
+                        ->orderBy('alarmDate', 'ASC')
                         ->orderBy('alarmTime', 'ASC')
                         ->get();
     }
@@ -40,6 +43,8 @@ class RemindersController extends Controller
     public function store(Request $request)
     {
         //
+        $userID = Auth::user()->id;
+        $request->merge(['userId' => $userID]);
         $reminder = Reminder::create($request->all());
         return $reminder;
     }
@@ -53,7 +58,8 @@ class RemindersController extends Controller
     public function show($id)
     {
         //
-        return Reminder::findOrFail($id);
+        $userID = Auth::user()->id;
+        return Reminder::where('userId', $userID)->findOrFail($id);
     }
 
     /**
@@ -77,7 +83,8 @@ class RemindersController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $reminder = Reminder::findOrFail($id);
+        $userID = Auth::user()->id;
+        $reminder = Reminder::where('userId', $userID)->findOrFail($id);
         $reminder->update($request->all());
         return $reminder;
     }
@@ -91,7 +98,8 @@ class RemindersController extends Controller
     public function destroy($id)
     {
         //
-        $reminder = Reminder::findOrFail($id);
+        $userID = Auth::user()->id;
+        $reminder = Reminder::where('userId', $userID)->findOrFail($id);
         $reminder->delete();
         return '';
     }

@@ -15,6 +15,7 @@ class CreateRemindersTable extends Migration
     {
         Schema::create('reminders', function (Blueprint $table) {
             $table->increments('id');
+            $table->unsignedInteger('userId');
             $table->string('title', 150);
             $table->unsignedInteger('category')->default(1);
             $table->boolean('isPayment');
@@ -27,6 +28,7 @@ class CreateRemindersTable extends Migration
             $table->boolean('deleteIt');
             $table->timestamps();
             $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('userId')->references('id')->on('users');
         });
     }
 

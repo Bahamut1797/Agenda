@@ -45805,7 +45805,7 @@ var render = function() {
           _c(
             "tbody",
             _vm._l(_vm.reminders, function(reminder, index) {
-              return _c("tr", [
+              return _c("tr", { key: reminder.id }, [
                 _c("td", [_vm._v(_vm._s(reminder.title))]),
                 _vm._v(" "),
                 _c("td", [_vm._v(_vm._s(reminder.amount))]),
@@ -46036,11 +46036,68 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             reminder: {
+                userId: '',
                 title: '',
                 category: 1,
                 isPayment: false,
@@ -46052,15 +46109,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alarmTime: '',
                 deleteIt: false
             },
+            category: {
+                userId: '',
+                name: ''
+            },
             categories: [],
-            objIdx: 0
+            objIdx: 0,
+            categoryName: ''
         };
     },
     mounted: function mounted() {
         var app = this;
         axios.get('/api/v1/categories').then(function (resp) {
             app.categories = resp.data;
-            //console.log(app.categories);
         }).catch(function (resp) {
             console.log(resp);
             alert("Could not load categories");
@@ -46071,6 +46132,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         saveForm: function saveForm() {
             var app = this;
             var newReminder = app.reminder;
+
+            if (!newReminder.isPayment) {
+                newReminder.amount = null;
+            }
+
             axios.post('/api/v1/reminders', newReminder).then(function (resp) {
                 app.$router.push({ path: '/' });
             }).catch(function (resp) {
@@ -46078,26 +46144,43 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alert("Could not create your reminder");
             });
         },
-        addCategory: function addCategory() {
-            alert("");
+        saveCategory: function saveCategory() {
+            var app = this;
+            var newCategory = app.category;
+            axios.post('/api/v1/categories', newCategory).then(function (resp) {
+                app.category.name = '';
+                $('#myModal').modal('hide');
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not create your category");
+                $('#myModal').modal('hide');
+            });
+
+            axios.get('/api/v1/categories').then(function (resp) {
+                app.categories = resp.data;
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not load categories");
+            });
         },
         handleChange: function handleChange(e) {
             if (e.target.options.selectedIndex > -1) {
                 this.objIdx = e.target.options.selectedIndex;
+                this.categoryName = this.categories[this.objIdx].name;
             }
         },
         deleteCategory: function deleteCategory() {
             var app = this;
-            var name = app.categories[app.objIdx].name;
             var id = app.categories[app.objIdx].id;
-            if (confirm("Do you really want to delete " + name + " category?")) {
-                axios.delete('/api/v1/categories/' + id).then(function (resp) {
-                    app.categories.splice(app.objIdx, 1);
-                    app.reminder.category = 1;
-                }).catch(function (resp) {
-                    alert("Could not delete category");
-                });
-            }
+
+            axios.delete('/api/v1/categories/' + id).then(function (resp) {
+                app.categories.splice(app.objIdx, 1);
+                app.reminder.category = 1;
+                $('#myModalDelete').modal('hide');
+            }).catch(function (resp) {
+                alert("Could not delete category");
+                $('#myModalDelete').modal('hide');
+            });
         }
     }
 });
@@ -46111,6 +46194,151 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "myModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.saveCategory()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-xs-12 form-group" }, [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Would you like to add a new category?")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.category.name,
+                              expression: "category.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          staticStyle: { width: "50%", display: "unset" },
+                          attrs: { type: "text", required: "" },
+                          domProps: { value: _vm.category.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.category,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ])
+              ]
+            )
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "myModalDelete",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("span", [
+                  _vm._v("Do you really want to delete "),
+                  _c("b", [_vm._v('"' + _vm._s(_vm.categoryName) + '"')]),
+                  _vm._v(" category?")
+                ]),
+                _vm._v(" "),
+                _c("label", [
+                  _vm._v(
+                    'NOTE: If you delete this, all reminders that are set with this category will set to "Default" category.'
+                  )
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Cancel")]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "pull-right" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.deleteCategory()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Continue\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _c(
       "div",
       { staticClass: "form-group" },
@@ -46217,13 +46445,17 @@ var render = function() {
                     }
                   },
                   _vm._l(_vm.categories, function(category) {
-                    return _c("option", { domProps: { value: category.id } }, [
-                      _vm._v(
-                        "\n                                " +
-                          _vm._s(category.name) +
-                          "\n                            "
-                      )
-                    ])
+                    return _c(
+                      "option",
+                      { key: category.id, domProps: { value: category.id } },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(category.name) +
+                            "\n                            "
+                        )
+                      ]
+                    )
                   })
                 ),
                 _vm._v(" "),
@@ -46231,11 +46463,14 @@ var render = function() {
                   "button",
                   {
                     staticClass: "btn btn-default",
-                    staticStyle: { border: "none", padding: "4px" },
+                    staticStyle: { border: "none", padding: "6px 4px" },
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#myModal"
+                    },
                     on: {
                       click: function($event) {
                         $event.preventDefault()
-                        _vm.addCategory()
                       }
                     }
                   },
@@ -46255,11 +46490,14 @@ var render = function() {
                       "button",
                       {
                         staticClass: "btn btn-default",
-                        staticStyle: { border: "none", padding: "4px" },
+                        staticStyle: { border: "none", padding: "6px 4px" },
+                        attrs: {
+                          "data-toggle": "modal",
+                          "data-target": "#myModalDelete"
+                        },
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            _vm.deleteCategory()
                           }
                         }
                       },
@@ -46323,38 +46561,40 @@ var render = function() {
                 })
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-xs-8 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Amount")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.reminder.amount,
-                      expression: "reminder.amount"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "number",
-                    required: "",
-                    min: "0",
-                    step: ".01"
-                  },
-                  domProps: { value: _vm.reminder.amount },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _vm.reminder.isPayment == 1
+                ? _c("div", { staticClass: "col-xs-8 form-group" }, [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Amount")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.reminder.amount,
+                          expression: "reminder.amount"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "number",
+                        required: _vm.reminder.isPayment == 1 ? true : false,
+                        min: "0",
+                        step: ".01"
+                      },
+                      domProps: { value: _vm.reminder.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.reminder, "amount", $event.target.value)
+                        }
                       }
-                      _vm.$set(_vm.reminder, "amount", $event.target.value)
-                    }
-                  }
-                })
-              ])
+                    })
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
@@ -46567,7 +46807,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _vm._m(3)
           ]
         )
       ])
@@ -46575,6 +46815,79 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Add new category")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-default",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cancel")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "pull-right" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [
+            _vm._v(
+              "\n                                Add Category\n                            "
+            )
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Delete category")
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -46723,6 +47036,48 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -46734,12 +47089,20 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }).catch(function () {
             alert("Could not load your reminder");
         });
+
+        axios.get('/api/v1/categories').then(function (resp) {
+            app.categories = resp.data;
+        }).catch(function (resp) {
+            console.log(resp);
+            alert("Could not load categories");
+        });
     },
 
     data: function data() {
         return {
             reminderId: null,
             reminder: {
+                userId: '',
                 title: '',
                 isPayment: false,
                 amount: null,
@@ -46749,20 +47112,53 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 alarmDate: null,
                 alarmTime: '',
                 deleteIt: false
-            }
+            },
+            category: {
+                userId: '',
+                name: ''
+            },
+            categories: [],
+            objIdx: 0
         };
     },
     methods: {
         saveForm: function saveForm() {
-            event.preventDefault();
             var app = this;
             var newReminder = app.reminder;
+            if (!newReminder.isPayment) {
+                newReminder.amount = null;
+            }
             axios.patch('/api/v1/reminders/' + app.reminderId, newReminder).then(function (resp) {
                 app.$router.replace('/');
             }).catch(function (resp) {
                 console.log(resp);
                 alert("Could not create your reminder");
             });
+        },
+        saveCategory: function saveCategory() {
+            var app = this;
+            var newCategory = app.category;
+            axios.post('/api/v1/categories', newCategory).then(function (resp) {
+                app.category.name = '';
+                $('#myModal').modal('hide');
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not create your category");
+                $('#myModal').modal('hide');
+            });
+
+            axios.get('/api/v1/categories').then(function (resp) {
+                app.categories = resp.data;
+            }).catch(function (resp) {
+                console.log(resp);
+                alert("Could not load categories");
+            });
+        },
+        handleChange: function handleChange(e) {
+            if (e.target.options.selectedIndex > -1) {
+                this.objIdx = e.target.options.selectedIndex;
+                this.categoryName = this.categories[this.objIdx].name;
+            }
         }
     }
 });
@@ -46776,6 +47172,82 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "myModal",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c(
+              "form",
+              {
+                on: {
+                  submit: function($event) {
+                    $event.preventDefault()
+                    _vm.saveCategory()
+                  }
+                }
+              },
+              [
+                _c("div", { staticClass: "modal-content" }, [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "modal-body" }, [
+                    _c("div", { staticClass: "row" }, [
+                      _c("div", { staticClass: "col-xs-12 form-group" }, [
+                        _c("label", { staticClass: "control-label" }, [
+                          _vm._v("Would you like to add a new category?")
+                        ]),
+                        _vm._v(" "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.category.name,
+                              expression: "category.name"
+                            }
+                          ],
+                          staticClass: "form-control",
+                          staticStyle: { width: "50%", display: "unset" },
+                          attrs: { type: "text", required: "" },
+                          domProps: { value: _vm.category.name },
+                          on: {
+                            input: function($event) {
+                              if ($event.target.composing) {
+                                return
+                              }
+                              _vm.$set(
+                                _vm.category,
+                                "name",
+                                $event.target.value
+                              )
+                            }
+                          }
+                        })
+                      ])
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ])
+              ]
+            )
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
     _c(
       "div",
       { staticClass: "form-group" },
@@ -46798,13 +47270,14 @@ var render = function() {
           {
             on: {
               submit: function($event) {
+                $event.preventDefault()
                 _vm.saveForm()
               }
             }
           },
           [
             _c("div", { staticClass: "row" }, [
-              _c("div", { staticClass: "col-xs-12 form-group" }, [
+              _c("div", { staticClass: "col-xs-7 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
                   _vm._v("Reminder title")
                 ]),
@@ -46830,6 +47303,94 @@ var render = function() {
                     }
                   }
                 })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-5 form-group" }, [
+                _c(
+                  "label",
+                  {
+                    staticClass: "control-label",
+                    staticStyle: { display: "block" }
+                  },
+                  [_vm._v("Category")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "select",
+                  {
+                    directives: [
+                      {
+                        name: "model",
+                        rawName: "v-model",
+                        value: _vm.reminder.category,
+                        expression: "reminder.category"
+                      }
+                    ],
+                    staticClass: "form-control",
+                    staticStyle: { width: "70%", display: "unset" },
+                    on: {
+                      change: [
+                        function($event) {
+                          var $$selectedVal = Array.prototype.filter
+                            .call($event.target.options, function(o) {
+                              return o.selected
+                            })
+                            .map(function(o) {
+                              var val = "_value" in o ? o._value : o.value
+                              return val
+                            })
+                          _vm.$set(
+                            _vm.reminder,
+                            "category",
+                            $event.target.multiple
+                              ? $$selectedVal
+                              : $$selectedVal[0]
+                          )
+                        },
+                        _vm.handleChange
+                      ]
+                    }
+                  },
+                  _vm._l(_vm.categories, function(category) {
+                    return _c(
+                      "option",
+                      { key: category.id, domProps: { value: category.id } },
+                      [
+                        _vm._v(
+                          "\n                                " +
+                            _vm._s(category.name) +
+                            "\n                            "
+                        )
+                      ]
+                    )
+                  })
+                ),
+                _vm._v(" "),
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    staticStyle: { border: "none", padding: "6px 4px" },
+                    attrs: {
+                      "data-toggle": "modal",
+                      "data-target": "#myModal"
+                    },
+                    on: {
+                      click: function($event) {
+                        $event.preventDefault()
+                      }
+                    }
+                  },
+                  [
+                    _c("img", {
+                      attrs: {
+                        src: "/open-iconic/svg/plus.svg",
+                        width: "15",
+                        alt: "add category"
+                      }
+                    })
+                  ]
+                )
               ])
             ]),
             _vm._v(" "),
@@ -46879,38 +47440,40 @@ var render = function() {
                 })
               ]),
               _vm._v(" "),
-              _c("div", { staticClass: "col-xs-8 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Amount")
-                ]),
-                _vm._v(" "),
-                _c("input", {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.reminder.amount,
-                      expression: "reminder.amount"
-                    }
-                  ],
-                  staticClass: "form-control",
-                  attrs: {
-                    type: "number",
-                    required: "",
-                    min: "0",
-                    step: ".01"
-                  },
-                  domProps: { value: _vm.reminder.amount },
-                  on: {
-                    input: function($event) {
-                      if ($event.target.composing) {
-                        return
+              _vm.reminder.isPayment == 1
+                ? _c("div", { staticClass: "col-xs-8 form-group" }, [
+                    _c("label", { staticClass: "control-label" }, [
+                      _vm._v("Amount")
+                    ]),
+                    _vm._v(" "),
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.reminder.amount,
+                          expression: "reminder.amount"
+                        }
+                      ],
+                      staticClass: "form-control",
+                      attrs: {
+                        type: "number",
+                        required: _vm.reminder.isPayment == 1 ? true : false,
+                        min: "0",
+                        step: ".01"
+                      },
+                      domProps: { value: _vm.reminder.amount },
+                      on: {
+                        input: function($event) {
+                          if ($event.target.composing) {
+                            return
+                          }
+                          _vm.$set(_vm.reminder, "amount", $event.target.value)
+                        }
                       }
-                      _vm.$set(_vm.reminder, "amount", $event.target.value)
-                    }
-                  }
-                })
-              ])
+                    })
+                  ])
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", { staticClass: "row" }, [
@@ -47123,7 +47686,7 @@ var render = function() {
               ])
             ]),
             _vm._v(" "),
-            _vm._m(0)
+            _vm._m(2)
           ]
         )
       ])
@@ -47135,9 +47698,63 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Add new category")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-footer" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-default",
+          attrs: { type: "button", "data-dismiss": "modal" }
+        },
+        [_vm._v("Cancel")]
+      ),
+      _vm._v(" "),
+      _c("span", { staticClass: "pull-right" }, [
+        _c(
+          "button",
+          { staticClass: "btn btn-primary", attrs: { type: "submit" } },
+          [
+            _vm._v(
+              "\n                                Add Category\n                            "
+            )
+          ]
+        )
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-xs-12 form-group" }, [
-        _c("button", { staticClass: "btn btn-success" }, [_vm._v("Update")])
+        _c(
+          "button",
+          { staticClass: "btn btn-success", attrs: { type: "submit" } },
+          [_vm._v("Update")]
+        )
       ])
     ])
   }

@@ -18,7 +18,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="reminder, index in reminders">
+                    <tr v-for="(reminder, index) in reminders" :key="reminder.id">
                         <td>{{ reminder.title }}</td>
                         <td>{{ reminder.amount }}</td>
                         <td>{{ reminder.location }}</td>

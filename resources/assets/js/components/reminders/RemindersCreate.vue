@@ -1,5 +1,61 @@
 <template>
     <div>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" >
+                <form v-on:submit.prevent="saveCategory()">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                            </button>
+                            <h4 class="modal-title" id="myModalLabel">Add new category</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row">
+                                <div class="col-xs-12 form-group">
+                                    <label class="control-label" >Would you like to add a new category?</label>
+                                    <input type="text" style="width:50%; display:unset;" required v-model="category.name" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <span class="pull-right">
+                                <button type="submit" class="btn btn-primary">
+                                    Add Category
+                                </button>
+                            </span>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Delete category</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span>Do you really want to delete <b>"{{ categoryName }}"</b> category?</span>
+                        <label>NOTE: If you delete this, all reminders that are set with this category will set to "Default" category.</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-danger" v-on:click="deleteCategory()">
+                                Continue
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <router-link to="/" class="btn btn-default">Back</router-link>
         </div>
@@ -16,15 +72,15 @@
                         <div class="col-xs-5 form-group">
                             <label class="control-label" style="display:block;" >Category</label>
                             <select v-on:change="handleChange" v-model="reminder.category" class="form-control" style="width:70%; display:unset;" >
-                                <option v-for="category in categories" v-bind:value="category.id" >
+                                <option v-for="category in categories" v-bind:value="category.id" :key="category.id">
                                     {{ category.name }}
                                 </option>
                             </select>
-                            <button class="btn btn-default" style="border:none; padding:4px;" v-on:click.prevent="addCategory()" >
-                               <img src="/open-iconic/svg/plus.svg" width="15" alt="add category" />
+                            <button class="btn btn-default" style="border:none; padding:6px 4px;" v-on:click.prevent=";" data-toggle="modal" data-target="#myModal" >
+                                <img src="/open-iconic/svg/plus.svg" width="15" alt="add category" />
                             </button>
-                            <button v-if="reminder.category > 1" class="btn btn-default" style="border:none; padding:4px;" v-on:click.prevent="deleteCategory()" >
-                               <img src="/open-iconic/svg/trash.svg" width="15" alt="delete category" />
+                            <button v-if="reminder.category > 1" class="btn btn-default" style="border:none; padding:6px 4px;" v-on:click.prevent=";" data-toggle="modal" data-target="#myModalDelete" >
+                                <img src="/open-iconic/svg/trash.svg" width="15" alt="delete category" />
                             </button>
                         </div>
                     </div>
@@ -33,9 +89,9 @@
                             <label class="control-label">Is a Payment?</label>
                             <input type="checkbox" v-model="reminder.isPayment">
                         </div>
-                        <div class="col-xs-8 form-group">
+                        <div v-if="reminder.isPayment == 1" class="col-xs-8 form-group">
                             <label class="control-label">Amount</label>
-                            <input type="number" required min="0" step=".01" v-model="reminder.amount" class="form-control">
+                            <input type="number" v-bind:required="reminder.isPayment == 1 ? true : false"  min="0" step=".01" v-model="reminder.amount" class="form-control">
                         </div>
                     </div>
                     <div class="row">
@@ -88,6 +144,7 @@
         data: function () {
             return {
                 reminder: {
+                    userId: '',
                     title: '',
                     category: 1,
                     isPayment: false,
@@ -99,8 +156,13 @@
                     alarmTime: '',
                     deleteIt: false,
                 },
+                category: {
+                    userId: '',
+                    name: ''
+                },
                 categories: [],
-                objIdx: 0
+                objIdx: 0,
+                categoryName: ''
             }
         },
         mounted() {
@@ -108,7 +170,6 @@
             axios.get('/api/v1/categories')
                 .then(function (resp) {
                     app.categories = resp.data;
-                    //console.log(app.categories);
                 })
                 .catch(function (resp) {
                     console.log(resp);
@@ -119,6 +180,11 @@
             saveForm() {
                 var app = this;
                 var newReminder = app.reminder;
+
+                if (!newReminder.isPayment) {
+                    newReminder.amount=null;
+                }
+
                 axios.post('/api/v1/reminders', newReminder)
                     .then(function (resp) {
                         app.$router.push({path: '/'});
@@ -128,28 +194,50 @@
                         alert("Could not create your reminder");
                     });
             },
-            addCategory() {
-                alert("");
+            saveCategory() {
+                var app = this;
+                var newCategory = app.category;
+                axios.post('/api/v1/categories', newCategory)
+                    .then(function (resp) {
+                        app.category.name='';
+                        $('#myModal').modal('hide');
+                    })
+                    .catch(function (resp) {
+                        console.log(resp);
+                        alert("Could not create your category");
+                        $('#myModal').modal('hide');
+                    });
+                
+                axios.get('/api/v1/categories')
+                        .then(function (resp) {
+                            app.categories = resp.data;
+                        })
+                        .catch(function (resp) {
+                            console.log(resp);
+                            alert("Could not load categories");
+                        });
             },
             handleChange(e) {
                 if(e.target.options.selectedIndex > -1) {
                     this.objIdx = e.target.options.selectedIndex;
+                    this.categoryName = this.categories[this.objIdx].name;
                 }
             },
             deleteCategory() {
                 var app = this;
-                var name = app.categories[app.objIdx].name;
                 var id = app.categories[app.objIdx].id;
-                if (confirm("Do you really want to delete " + name + " category?")) {
-                    axios.delete('/api/v1/categories/' + id)
-                        .then(function (resp) {
-                            app.categories.splice(app.objIdx, 1);
-                            app.reminder.category = 1;
-                        })
-                        .catch(function (resp) {
-                            alert("Could not delete category");
-                        });
-                }
+                
+                axios.delete('/api/v1/categories/' + id)
+                    .then(function (resp) {
+                        app.categories.splice(app.objIdx, 1);
+                        app.reminder.category = 1;
+                        $('#myModalDelete').modal('hide');
+                    })
+                    .catch(function (resp) {
+                        alert("Could not delete category");
+                        $('#myModalDelete').modal('hide');
+                    });
+                
             }
         }
     }

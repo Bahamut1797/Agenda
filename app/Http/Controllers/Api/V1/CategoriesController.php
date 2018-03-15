@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api\V1;
 use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Auth;
 
 class CategoriesController extends Controller
 {
@@ -16,7 +17,8 @@ class CategoriesController extends Controller
     public function index()
     {
         //
-        return Category::all();
+        $userID = Auth::user()->id;
+        return Category::where('userId', $userID)->get();
     }
 
     /**
@@ -38,6 +40,8 @@ class CategoriesController extends Controller
     public function store(Request $request)
     {
         //
+        $userID = Auth::user()->id;
+        $request->merge(['userId' => $userID]);
         $category = Category::create($request->all());
         return $category;
     }
@@ -51,7 +55,8 @@ class CategoriesController extends Controller
     public function show($id)
     {
         //
-        return Category::findOrFail($id);
+        $userID = Auth::user()->id;
+        return Category::where('userId', $userID)->findOrFail($id);
     }
 
     /**
@@ -75,7 +80,8 @@ class CategoriesController extends Controller
     public function update(Request $request, $id)
     {
         //
-        $category = Category::findOrFail($id);
+        $userID = Auth::user()->id;
+        $category = Category::where('userId', $userID)->findOrFail($id);
         $category->update($request->all());
         return $category;
     }
@@ -89,7 +95,8 @@ class CategoriesController extends Controller
     public function destroy($id)
     {
         //
-        $category = Category::findOrFail($id);
+        $userID = Auth::user()->id;
+        $category = Category::where('userId', $userID)->findOrFail($id);
         $category->delete();
         return '';
     }
