@@ -25,7 +25,7 @@ class CreateArchiveRemindersTable extends Migration
             $table->date('alarmDate')->nullable();
             $table->time('alarmTime');
             $table->timestamps();
-            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('category')->references('id')->on('categories');
             $table->foreign('userId')->references('id')->on('users');
         });
     }

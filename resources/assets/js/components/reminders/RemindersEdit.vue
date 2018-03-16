@@ -46,7 +46,7 @@
                         </div>
                         <div class="col-xs-5 form-group">
                             <label class="control-label" style="display:block;" >Category</label>
-                            <select v-on:change="handleChange" v-model="reminder.category" class="form-control" style="width:70%; display:unset;" >
+                            <select v-model="reminder.category" class="form-control" style="width:70%; display:unset;" >
                                 <option v-for="category in categories" v-bind:value="category.id" :key="category.id" >
                                     {{ category.name }}
                                 </option>
@@ -153,8 +153,7 @@
                     userId: '',
                     name: ''
                 },
-                categories: [],
-                objIdx: 0,
+                categories: []
             }
         },
         methods: {
@@ -184,6 +183,7 @@
                     .catch(function (resp) {
                         console.log(resp);
                         alert("Could not create your category");
+                        app.category.name='';
                         $('#myModal').modal('hide');
                     });
                 
@@ -195,12 +195,6 @@
                             console.log(resp);
                             alert("Could not load categories");
                         });
-            },
-            handleChange(e) {
-                if(e.target.options.selectedIndex > -1) {
-                    this.objIdx = e.target.options.selectedIndex;
-                    this.categoryName = this.categories[this.objIdx].name;
-                }
             }
         }
     }

@@ -1,4 +1,5 @@
 <template>
+<!-- Map API Key = AIzaSyAENdWcoLuX90NCaHxtNMDDdLjx2hZIIJ4 -->
     <div>
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document" >
@@ -79,7 +80,7 @@
                             <button class="btn btn-default" style="border:none; padding:6px 4px;" v-on:click.prevent=";" data-toggle="modal" data-target="#myModal" >
                                 <img src="/open-iconic/svg/plus.svg" width="15" alt="add category" />
                             </button>
-                            <button v-if="reminder.category > 1" class="btn btn-default" style="border:none; padding:6px 4px;" v-on:click.prevent=";" data-toggle="modal" data-target="#myModalDelete" >
+                            <button v-if="categoryName != 'Default'" class="btn btn-default" style="border:none; padding:6px 4px;" v-on:click.prevent=";" data-toggle="modal" data-target="#myModalDelete" >
                                 <img src="/open-iconic/svg/trash.svg" width="15" alt="delete category" />
                             </button>
                         </div>
@@ -162,7 +163,7 @@
                 },
                 categories: [],
                 objIdx: 0,
-                categoryName: ''
+                categoryName: 'Default'
             }
         },
         mounted() {
@@ -205,6 +206,7 @@
                     .catch(function (resp) {
                         console.log(resp);
                         alert("Could not create your category");
+                        app.category.name='';
                         $('#myModal').modal('hide');
                     });
                 
@@ -230,7 +232,8 @@
                 axios.delete('/api/v1/categories/' + id)
                     .then(function (resp) {
                         app.categories.splice(app.objIdx, 1);
-                        app.reminder.category = 1;
+                        app.reminder.category = app.categories[0].id;
+                        app.categoryName = 'Default';
                         $('#myModalDelete').modal('hide');
                     })
                     .catch(function (resp) {

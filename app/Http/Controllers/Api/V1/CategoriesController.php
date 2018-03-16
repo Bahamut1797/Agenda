@@ -6,6 +6,7 @@ use App\Category;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Auth;
+use DB;
 
 class CategoriesController extends Controller
 {
@@ -18,7 +19,9 @@ class CategoriesController extends Controller
     {
         //
         $userID = Auth::user()->id;
-        return Category::where('userId', $userID)->get();
+        return Category::where('userId', $userID)
+                        ->orderBy('id', 'ASC')
+                        ->get();
     }
 
     /**
@@ -97,6 +100,10 @@ class CategoriesController extends Controller
         //
         $userID = Auth::user()->id;
         $category = Category::where('userId', $userID)->findOrFail($id);
+
+        $firstCategory = Category::where('userId', $userID)->orderBy('id', 'ASC')->first();
+        DB::update("UPDATE `reminders` SET `reminders`.`category` = $firstCategory->id WHERE `reminders`.`userId` = $userID AND `reminders`.`category` = $id");
+        
         $category->delete();
         return '';
     }

@@ -27,7 +27,7 @@ class CreateRemindersTable extends Migration
             $table->time('alarmTime');
             $table->boolean('deleteIt');
             $table->timestamps();
-            $table->foreign('category')->references('id')->on('categories')->onDelete('cascade');
+            $table->foreign('category')->references('id')->on('categories');
             $table->foreign('userId')->references('id')->on('users');
         });
     }

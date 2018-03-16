@@ -7,7 +7,11 @@
         <div class="panel panel-default">
             <div class="panel-heading">Reminder list</div>
             <div class="panel-body">
-                <table class="table table-bordered table-striped">
+                <div v-if="loading">
+                    <img src="/imgs/loader.gif"/>
+                    Loading.....
+                </div>
+                <table v-if="!loading" class="table table-bordered table-striped">
                     <thead>
                     <tr>
                         <th>Title</th>
@@ -45,18 +49,22 @@
     export default {
         data: function () {
             return {
-                reminders: []
+                reminders: [],
+                loading: false
             }
         },
         mounted() {
             var app = this;
+            app.loading = true;
             axios.get('/api/v1/reminders')
                 .then(function (resp) {
+                    app.loading = false;
                     app.reminders = resp.data;
                 })
                 .catch(function (resp) {
                     console.log(resp);
                     alert("Could not load reminders");
+                    app.loading = false;
                 });
         },
         methods: {

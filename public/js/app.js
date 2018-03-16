@@ -45739,20 +45739,28 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
-            reminders: []
+            reminders: [],
+            loading: false
         };
     },
     mounted: function mounted() {
         var app = this;
+        app.loading = true;
         axios.get('/api/v1/reminders').then(function (resp) {
+            app.loading = false;
             app.reminders = resp.data;
         }).catch(function (resp) {
             console.log(resp);
             alert("Could not load reminders");
+            app.loading = false;
         });
     },
 
@@ -45799,72 +45807,81 @@ var render = function() {
       _c("div", { staticClass: "panel-heading" }, [_vm._v("Reminder list")]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-body" }, [
-        _c("table", { staticClass: "table table-bordered table-striped" }, [
-          _vm._m(0),
-          _vm._v(" "),
-          _c(
-            "tbody",
-            _vm._l(_vm.reminders, function(reminder, index) {
-              return _c("tr", { key: reminder.id }, [
-                _c("td", [_vm._v(_vm._s(reminder.title))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(reminder.amount))]),
-                _vm._v(" "),
-                _c("td", [_vm._v(_vm._s(reminder.location))]),
-                _vm._v(" "),
-                _c("td", [
-                  _vm._v(
-                    _vm._s(reminder.alarmDate) +
-                      " - " +
-                      _vm._s(reminder.alarmTime)
-                  )
-                ]),
-                _vm._v(" "),
-                _c(
-                  "td",
-                  [
-                    _c(
-                      "router-link",
-                      {
-                        staticClass: "btn btn-xs btn-default",
-                        attrs: {
-                          to: {
-                            name: "editReminder",
-                            params: { id: reminder.id }
-                          }
-                        }
-                      },
-                      [
-                        _vm._v(
-                          "\n                            Edit\n                        "
-                        )
-                      ]
-                    ),
+        _vm.loading
+          ? _c("div", [
+              _c("img", { attrs: { src: "/imgs/loader.gif" } }),
+              _vm._v("\n                Loading.....\n            ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.loading
+          ? _c("table", { staticClass: "table table-bordered table-striped" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.reminders, function(reminder, index) {
+                  return _c("tr", { key: reminder.id }, [
+                    _c("td", [_vm._v(_vm._s(reminder.title))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(reminder.amount))]),
+                    _vm._v(" "),
+                    _c("td", [_vm._v(_vm._s(reminder.location))]),
+                    _vm._v(" "),
+                    _c("td", [
+                      _vm._v(
+                        _vm._s(reminder.alarmDate) +
+                          " - " +
+                          _vm._s(reminder.alarmTime)
+                      )
+                    ]),
                     _vm._v(" "),
                     _c(
-                      "a",
-                      {
-                        staticClass: "btn btn-xs btn-danger",
-                        attrs: { href: "#" },
-                        on: {
-                          click: function($event) {
-                            _vm.deleteEntry(reminder.id, index)
-                          }
-                        }
-                      },
+                      "td",
                       [
-                        _vm._v(
-                          "\n                            Delete\n                        "
+                        _c(
+                          "router-link",
+                          {
+                            staticClass: "btn btn-xs btn-default",
+                            attrs: {
+                              to: {
+                                name: "editReminder",
+                                params: { id: reminder.id }
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Edit\n                        "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "a",
+                          {
+                            staticClass: "btn btn-xs btn-danger",
+                            attrs: { href: "#" },
+                            on: {
+                              click: function($event) {
+                                _vm.deleteEntry(reminder.id, index)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                            Delete\n                        "
+                            )
+                          ]
                         )
-                      ]
+                      ],
+                      1
                     )
-                  ],
-                  1
-                )
-              ])
-            })
-          )
-        ])
+                  ])
+                })
+              )
+            ])
+          : _vm._e()
       ])
     ])
   ])
@@ -46092,6 +46109,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -46115,7 +46133,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             },
             categories: [],
             objIdx: 0,
-            categoryName: ''
+            categoryName: 'Default'
         };
     },
     mounted: function mounted() {
@@ -46153,6 +46171,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (resp) {
                 console.log(resp);
                 alert("Could not create your category");
+                app.category.name = '';
                 $('#myModal').modal('hide');
             });
 
@@ -46175,7 +46194,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             axios.delete('/api/v1/categories/' + id).then(function (resp) {
                 app.categories.splice(app.objIdx, 1);
-                app.reminder.category = 1;
+                app.reminder.category = app.categories[0].id;
+                app.categoryName = 'Default';
                 $('#myModalDelete').modal('hide');
             }).catch(function (resp) {
                 alert("Could not delete category");
@@ -46327,7 +46347,7 @@ var render = function() {
                     },
                     [
                       _vm._v(
-                        "\n                            Continue\n                        "
+                        "\r\n                                Continue\r\n                            "
                       )
                     ]
                   )
@@ -46450,9 +46470,9 @@ var render = function() {
                       { key: category.id, domProps: { value: category.id } },
                       [
                         _vm._v(
-                          "\n                                " +
+                          "\r\n                                    " +
                             _vm._s(category.name) +
-                            "\n                            "
+                            "\r\n                                "
                         )
                       ]
                     )
@@ -46485,7 +46505,7 @@ var render = function() {
                   ]
                 ),
                 _vm._v(" "),
-                _vm.reminder.category > 1
+                _vm.categoryName != "Default"
                   ? _c(
                       "button",
                       {
@@ -46858,7 +46878,7 @@ var staticRenderFns = [
           { staticClass: "btn btn-primary", attrs: { type: "submit" } },
           [
             _vm._v(
-              "\n                                Add Category\n                            "
+              "\r\n                                    Add Category\r\n                                "
             )
           ]
         )
@@ -47117,8 +47137,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 userId: '',
                 name: ''
             },
-            categories: [],
-            objIdx: 0
+            categories: []
         };
     },
     methods: {
@@ -47144,6 +47163,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }).catch(function (resp) {
                 console.log(resp);
                 alert("Could not create your category");
+                app.category.name = '';
                 $('#myModal').modal('hide');
             });
 
@@ -47153,12 +47173,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 console.log(resp);
                 alert("Could not load categories");
             });
-        },
-        handleChange: function handleChange(e) {
-            if (e.target.options.selectedIndex > -1) {
-                this.objIdx = e.target.options.selectedIndex;
-                this.categoryName = this.categories[this.objIdx].name;
-            }
         }
     }
 });
@@ -47329,26 +47343,23 @@ var render = function() {
                     staticClass: "form-control",
                     staticStyle: { width: "70%", display: "unset" },
                     on: {
-                      change: [
-                        function($event) {
-                          var $$selectedVal = Array.prototype.filter
-                            .call($event.target.options, function(o) {
-                              return o.selected
-                            })
-                            .map(function(o) {
-                              var val = "_value" in o ? o._value : o.value
-                              return val
-                            })
-                          _vm.$set(
-                            _vm.reminder,
-                            "category",
-                            $event.target.multiple
-                              ? $$selectedVal
-                              : $$selectedVal[0]
-                          )
-                        },
-                        _vm.handleChange
-                      ]
+                      change: function($event) {
+                        var $$selectedVal = Array.prototype.filter
+                          .call($event.target.options, function(o) {
+                            return o.selected
+                          })
+                          .map(function(o) {
+                            var val = "_value" in o ? o._value : o.value
+                            return val
+                          })
+                        _vm.$set(
+                          _vm.reminder,
+                          "category",
+                          $event.target.multiple
+                            ? $$selectedVal
+                            : $$selectedVal[0]
+                        )
+                      }
                     }
                   },
                   _vm._l(_vm.categories, function(category) {
