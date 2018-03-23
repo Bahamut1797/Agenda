@@ -56407,7 +56407,13 @@ var render = function() {
                     _vm._v(" "),
                     _c("td", [_vm._v(_vm._s(reminder.amount))]),
                     _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(reminder.location))]),
+                    _c("td", [
+                      _c(
+                        "a",
+                        { attrs: { target: "_blank", href: reminder.urlLoc } },
+                        [_vm._v(_vm._s(reminder.location))]
+                      )
+                    ]),
                     _vm._v(" "),
                     _c("td", [
                       _vm._v(
@@ -56701,6 +56707,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 isPayment: false,
                 amount: null,
                 location: null,
+                urlLoc: null,
                 frecuency: 'Once',
                 repeat: false,
                 alarmDate: null,
@@ -56740,6 +56747,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (!newReminder.isPayment) {
                 newReminder.amount = null;
+            }
+
+            if (newReminder.location != null) {
+                newReminder.urlLoc = 'https://www.google.com/maps/search/?api=1&query=' + encodeURI(newReminder.location);
             }
 
             axios.post('/api/v1/reminders', newReminder).then(function (resp) {
@@ -57703,6 +57714,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 isPayment: false,
                 amount: null,
                 location: null,
+                urlLoc: null,
                 frecuency: '',
                 repeat: false,
                 alarmDate: null,
@@ -57725,6 +57737,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             if (!newReminder.isPayment) {
                 newReminder.amount = null;
+            }
+
+            if (newReminder.location != null) {
+                newReminder.urlLoc = 'https://www.google.com/maps/search/?api=1&query=' + encodeURI(newReminder.location);
             }
 
             axios.patch('/api/v1/reminders/' + app.reminderId, newReminder).then(function (resp) {

@@ -144,6 +144,7 @@
                     isPayment: false,
                     amount: null,
                     location: null,
+                    urlLoc: null,
                     frecuency: '',
                     repeat: false,
                     alarmDate: null,
@@ -166,6 +167,10 @@
 
                 if (!newReminder.isPayment) {
                     newReminder.amount=null;
+                }
+
+                if(newReminder.location != null) {
+                    newReminder.urlLoc = 'https://www.google.com/maps/search/?api=1&query=' + encodeURI(newReminder.location);
                 }
                 
                 axios.patch('/api/v1/reminders/' + app.reminderId, newReminder)

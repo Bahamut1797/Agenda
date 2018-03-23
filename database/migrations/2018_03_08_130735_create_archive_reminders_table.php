@@ -21,7 +21,8 @@ class CreateArchiveRemindersTable extends Migration
             $table->boolean('isPayment');
             $table->double('amount')->nullable();
             $table->string('location', 1000)->nullable();
-            $table->string('frecuency', 256); // once, certain days, certain date, every month
+            $table->string('urlLoc', 2000)->nullable();
+            $table->string('frecuency', 256);
             $table->date('alarmDate')->nullable();
             $table->time('alarmTime');
             $table->timestamps();

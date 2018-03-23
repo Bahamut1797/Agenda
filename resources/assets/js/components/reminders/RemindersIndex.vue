@@ -25,7 +25,7 @@
                     <tr v-for="(reminder, index) in reminders" :key="reminder.id">
                         <td>{{ reminder.title }}</td>
                         <td>{{ reminder.amount }}</td>
-                        <td>{{ reminder.location }}</td>
+                        <td><a target="_blank" v-bind:href="reminder.urlLoc">{{ reminder.location }}</a></td>
                         <td>{{ reminder.alarmDate }} - {{ reminder.alarmTime }}</td>
                         <td>
                             <router-link :to="{name: 'editReminder', params: {id: reminder.id}}" class="btn btn-xs btn-default">
