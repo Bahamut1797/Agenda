@@ -1,5 +1,4 @@
 <template>
-<!-- Map API Key = AIzaSyAENdWcoLuX90NCaHxtNMDDdLjx2hZIIJ4 -->
     <div>
         <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
             <div class="modal-dialog" role="document" >
@@ -98,7 +97,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Location</label>
-                            <input type="text" v-model="reminder.location" class="form-control">
+                            <gmap-autocomplete id="map" class="form-control"></gmap-autocomplete>
                         </div>
                     </div>
                     <div class="row">
@@ -116,7 +115,7 @@
                     <div class="row">
                         <div class="col-xs-6 form-group">
                             <label class="control-label">Alarm Date</label>
-                            <input type="date" v-model="reminder.alarmDate" class="form-control">
+                            <input required type="date" v-model="reminder.alarmDate" class="form-control">
                         </div>
                         <div class="col-xs-6 form-group">
                             <label class="control-label">Alarm Time</label>
@@ -151,7 +150,7 @@
                     isPayment: false,
                     amount: null,
                     location: null,
-                    frecuency: '',
+                    frecuency: 'Once',
                     repeat: false,
                     alarmDate: null,
                     alarmTime: '',
@@ -167,7 +166,12 @@
             }
         },
         mounted() {
+            var d = new Date();
+            var currentDate = d.getFullYear().toString() + "-" + ((d.getMonth()+1 < 10) ? ("0" + (d.getMonth()+1)) : (d.getMonth()+1)) + "-" + d.getDate();
+
             var app = this;
+            app.reminder.alarmDate = currentDate;
+
             axios.get('/api/v1/categories')
                 .then(function (resp) {
                     app.categories = resp.data;
@@ -181,6 +185,8 @@
             saveForm() {
                 var app = this;
                 var newReminder = app.reminder;
+
+                app.reminder.location = document.getElementById("map").value;
 
                 if (!newReminder.isPayment) {
                     newReminder.amount=null;
@@ -245,4 +251,3 @@
         }
     }
 </script>
- 

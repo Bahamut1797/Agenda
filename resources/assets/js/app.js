@@ -8,6 +8,18 @@
 require('./bootstrap');
  
 window.Vue = require('vue');
+
+import * as VueGoogleMaps from 'vue2-google-maps'
+window.Vue.use(VueGoogleMaps, {
+  load: {
+    key: 'AIzaSyAENdWcoLuX90NCaHxtNMDDdLjx2hZIIJ4',
+    libraries: 'places', // This is required if you use the Autocomplete plugin
+    // OR: libraries: 'places,drawing'
+    // OR: libraries: 'places,drawing,visualization'
+    // (as you require)
+  }
+})
+
 import VueRouter from 'vue-router';
  
 window.Vue.use(VueRouter);

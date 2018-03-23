@@ -14,11 +14,11 @@
                 <table v-if="!loading" class="table table-bordered table-striped">
                     <thead>
                     <tr>
-                        <th>Title</th>
-                        <th>Amount</th>
-                        <th>Location</th>
-                        <th>Alarm Date</th>
-                        <th width="100">&nbsp;</th>
+                        <th class="col-xs-3">Title</th>
+                        <th class="col-xs-1">Amount</th>
+                        <th class="col-xs-4">Location</th>
+                        <th class="col-xs-3">Alarm Date</th>
+                        <th class="col-xs-1">&nbsp;</th>
                     </tr>
                     </thead>
                     <tbody>

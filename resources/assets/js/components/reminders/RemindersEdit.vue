@@ -69,7 +69,7 @@
                     <div class="row">
                         <div class="col-xs-12 form-group">
                             <label class="control-label">Location</label>
-                            <input type="text" v-model="reminder.location" class="form-control">
+                            <gmap-autocomplete id="map" class="form-control"></gmap-autocomplete>
                         </div>
                     </div>
                     <div class="row">
@@ -120,6 +120,7 @@
             axios.get('/api/v1/reminders/' + id)
                 .then(function (resp) {
                     app.reminder = resp.data;
+                    document.getElementById("map").value = app.reminder.location;
                 })
                 .catch(function () {
                     alert("Could not load your reminder")
@@ -160,9 +161,13 @@
             saveForm() {
                 var app = this;
                 var newReminder = app.reminder;
+
+                app.reminder.location = document.getElementById("map").value;
+
                 if (!newReminder.isPayment) {
                     newReminder.amount=null;
                 }
+                
                 axios.patch('/api/v1/reminders/' + app.reminderId, newReminder)
                     .then(function (resp) {
                         app.$router.replace('/');
