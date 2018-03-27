@@ -1,5 +1,30 @@
 <template>
     <div>
+        <div class="modal fade" id="myModalDelete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document" >
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                        <h4 class="modal-title" id="myModalLabel">Delete category</h4>
+                    </div>
+                    <div class="modal-body">
+                        <span>Do you really want to delete <b>"{{ reminder.title }}"</b> reminder?</span>
+                        <label>NOTE: If you delete this, all reminders that are set with this category will set to "Default" category.</label>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <span class="pull-right">
+                            <button type="button" class="btn btn-danger" v-on:click="deleteCategory()">
+                                Continue
+                            </button>
+                        </span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="form-group">
             <router-link :to="{name: 'createReminder'}" class="btn btn-success">Create new reminder</router-link>
         </div>
@@ -63,7 +88,7 @@
                 })
                 .catch(function (resp) {
                     console.log(resp);
-                    alert("Could not load reminders");
+                    $.notify("Could not load reminders", "error");
                     app.loading = false;
                 });
         },
@@ -73,10 +98,11 @@
                     var app = this;
                     axios.delete('/api/v1/reminders/' + id)
                         .then(function (resp) {
+                            $.notify("Reminder deleted", "success");
                             app.reminders.splice(index, 1);
                         })
                         .catch(function (resp) {
-                            alert("Could not delete reminder");
+                            $.notify("Could not delete reminder", "error");
                         });
                 }
             }

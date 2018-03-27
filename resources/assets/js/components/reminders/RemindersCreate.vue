@@ -101,15 +101,15 @@
                         </div>
                     </div>
                     <div class="row">
-                        <div class="col-xs-12 form-group">
-                            <label class="control-label">Frecuency</label>
-                            <input type="text" required v-model="reminder.frecuency" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row">
                         <div class="col-xs-6 form-group">
                             <label class="control-label">Repeat</label>
                             <input type="checkbox" v-model="reminder.repeat">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div v-if="reminder.repeat == 1" class="col-xs-12 form-group">
+                            <label class="control-label">Frecuency</label>
+                            <input type="text" v-bind:required="reminder.repeat == 1 ? true : false" v-model="reminder.frecuency" class="form-control">
                         </div>
                     </div>
                     <div class="row">
@@ -176,10 +176,12 @@
             axios.get('/api/v1/categories')
                 .then(function (resp) {
                     app.categories = resp.data;
+                    app.reminder.category = app.categories[0].id;
                 })
                 .catch(function (resp) {
                     console.log(resp);
-                    alert("Could not load categories");
+                    $.notify("Could not load categories", "warn");
+                    $.notify("Refresh the current page", "info");
                 });
         },
         methods: {
@@ -193,17 +195,22 @@
                     newReminder.amount=null;
                 }
 
+                if (!newReminder.repeat) {
+                    newReminder.frecuency='Once';
+                }
+
                 if(newReminder.location != null) {
                     newReminder.urlLoc = 'https://www.google.com/maps/search/?api=1&query=' + encodeURI(newReminder.location);
                 }
 
                 axios.post('/api/v1/reminders', newReminder)
                     .then(function (resp) {
+                        $.notify("Reminder created", "success");
                         app.$router.push({path: '/'});
                     })
                     .catch(function (resp) {
                         console.log(resp);
-                        alert("Could not create your reminder");
+                        $.notify("Could not create your reminder", "error");
                     });
             },
             saveCategory() {
@@ -212,11 +219,12 @@
                 axios.post('/api/v1/categories', newCategory)
                     .then(function (resp) {
                         app.category.name='';
+                        $.notify("Category created", "success");
                         $('#myModal').modal('hide');
                     })
                     .catch(function (resp) {
                         console.log(resp);
-                        alert("Could not create your category");
+                        $.notify("Could not create your category", "error");
                         app.category.name='';
                         $('#myModal').modal('hide');
                     });
@@ -227,7 +235,8 @@
                         })
                         .catch(function (resp) {
                             console.log(resp);
-                            alert("Could not load categories");
+                            $.notify("Could not load categories", "warn");
+                            $.notify("Refresh the current page", "info");
                         });
             },
             handleChange(e) {
@@ -245,10 +254,11 @@
                         app.categories.splice(app.objIdx, 1);
                         app.reminder.category = app.categories[0].id;
                         app.categoryName = 'Default';
+                        $.notify("Category deleted", "success");
                         $('#myModalDelete').modal('hide');
                     })
                     .catch(function (resp) {
-                        alert("Could not delete category");
+                        $.notify("Could not delete category", "error");
                         $('#myModalDelete').modal('hide');
                     });
                 
