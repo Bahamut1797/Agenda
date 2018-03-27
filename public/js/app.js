@@ -56500,13 +56500,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
         return {
             reminders: [],
-            loading: false
+            loading: false,
+            reminderTitle: '',
+            reminderId: 0,
+            reminderIndex: ''
         };
     },
     mounted: function mounted() {
@@ -56523,16 +56525,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
 
     methods: {
-        deleteEntry: function deleteEntry(id, index) {
-            if (confirm("Do you really want to delete it?")) {
-                var app = this;
-                axios.delete('/api/v1/reminders/' + id).then(function (resp) {
-                    $.notify("Reminder deleted", "success");
-                    app.reminders.splice(index, 1);
-                }).catch(function (resp) {
-                    $.notify("Could not delete reminder", "error");
-                });
-            }
+        setValues: function setValues(id, index) {
+            var app = this;
+            app.reminderId = id;
+            app.reminderIndex = index;
+            app.reminderTitle = app.reminders[index].title;
+        },
+        deleteEntry: function deleteEntry() {
+            var app = this;
+            axios.delete('/api/v1/reminders/' + app.reminderId).then(function (resp) {
+                $.notify("Reminder deleted", "success");
+                app.reminders.splice(app.reminderIndex, 1);
+                $('#myModalDelete').modal('hide');
+            }).catch(function (resp) {
+                $.notify("Could not delete reminder", "error");
+                $('#myModalDelete').modal('hide');
+            });
         }
     }
 });
@@ -56568,14 +56576,8 @@ var render = function() {
               _c("div", { staticClass: "modal-body" }, [
                 _c("span", [
                   _vm._v("Do you really want to delete "),
-                  _c("b", [_vm._v('"' + _vm._s(_vm.reminder.title) + '"')]),
+                  _c("b", [_vm._v('"' + _vm._s(_vm.reminderTitle) + '"')]),
                   _vm._v(" reminder?")
-                ]),
-                _vm._v(" "),
-                _c("label", [
-                  _vm._v(
-                    'NOTE: If you delete this, all reminders that are set with this category will set to "Default" category.'
-                  )
                 ])
               ]),
               _vm._v(" "),
@@ -56597,7 +56599,7 @@ var render = function() {
                       attrs: { type: "button" },
                       on: {
                         click: function($event) {
-                          _vm.deleteCategory()
+                          _vm.deleteEntry()
                         }
                       }
                     },
@@ -56695,10 +56697,14 @@ var render = function() {
                           "a",
                           {
                             staticClass: "btn btn-xs btn-danger",
-                            attrs: { href: "#" },
+                            attrs: {
+                              href: "#",
+                              "data-toggle": "modal",
+                              "data-target": "#myModalDelete"
+                            },
                             on: {
                               click: function($event) {
-                                _vm.deleteEntry(reminder.id, index)
+                                _vm.setValues(reminder.id, index)
                               }
                             }
                           },
@@ -56740,7 +56746,7 @@ var staticRenderFns = [
       ),
       _vm._v(" "),
       _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
-        _vm._v("Delete category")
+        _vm._v("Delete Reminder")
       ])
     ])
   },

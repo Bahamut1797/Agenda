@@ -7,16 +7,15 @@
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
-                        <h4 class="modal-title" id="myModalLabel">Delete category</h4>
+                        <h4 class="modal-title" id="myModalLabel">Delete Reminder</h4>
                     </div>
                     <div class="modal-body">
-                        <span>Do you really want to delete <b>"{{ reminder.title }}"</b> reminder?</span>
-                        <label>NOTE: If you delete this, all reminders that are set with this category will set to "Default" category.</label>
+                        <span>Do you really want to delete <b>"{{ reminderTitle }}"</b> reminder?</span>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                         <span class="pull-right">
-                            <button type="button" class="btn btn-danger" v-on:click="deleteCategory()">
+                            <button type="button" class="btn btn-danger" v-on:click="deleteEntry()">
                                 Continue
                             </button>
                         </span>
@@ -57,8 +56,8 @@
                                 Edit
                             </router-link>
                             <a href="#"
-                               class="btn btn-xs btn-danger"
-                               v-on:click="deleteEntry(reminder.id, index)">
+                               class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete"
+                               v-on:click="setValues(reminder.id, index)">
                                 Delete
                             </a>
                         </td>
@@ -75,7 +74,10 @@
         data: function () {
             return {
                 reminders: [],
-                loading: false
+                loading: false,
+                reminderTitle: '',
+                reminderId: 0,
+                reminderIndex: ''
             }
         },
         mounted() {
@@ -93,18 +95,24 @@
                 });
         },
         methods: {
-            deleteEntry(id, index) {
-                if (confirm("Do you really want to delete it?")) {
-                    var app = this;
-                    axios.delete('/api/v1/reminders/' + id)
-                        .then(function (resp) {
-                            $.notify("Reminder deleted", "success");
-                            app.reminders.splice(index, 1);
-                        })
-                        .catch(function (resp) {
-                            $.notify("Could not delete reminder", "error");
-                        });
-                }
+            setValues(id, index) {
+                var app = this;
+                app.reminderId = id;
+                app.reminderIndex = index;
+                app.reminderTitle = app.reminders[index].title;
+            },
+            deleteEntry() {
+                var app = this;
+                axios.delete('/api/v1/reminders/' + app.reminderId)
+                    .then(function (resp) {
+                        $.notify("Reminder deleted", "success");
+                        app.reminders.splice(app.reminderIndex, 1);
+                        $('#myModalDelete').modal('hide');
+                    })
+                    .catch(function (resp) {
+                        $.notify("Could not delete reminder", "error");
+                        $('#myModalDelete').modal('hide');
+                    });
             }
         }
     }
