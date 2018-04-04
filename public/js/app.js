@@ -56500,6 +56500,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -56651,73 +56653,87 @@ var render = function() {
               _c(
                 "tbody",
                 _vm._l(_vm.reminders, function(reminder, index) {
-                  return _c("tr", { key: reminder.id }, [
-                    _c("td", [_vm._v(_vm._s(reminder.title))]),
-                    _vm._v(" "),
-                    _c("td", [_vm._v(_vm._s(reminder.amount))]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _c(
-                        "a",
-                        { attrs: { target: "_blank", href: reminder.urlLoc } },
-                        [_vm._v(_vm._s(reminder.location))]
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c("td", [
-                      _vm._v(
-                        _vm._s(reminder.alarmDate) +
-                          " - " +
-                          _vm._s(reminder.alarmTime)
-                      )
-                    ]),
-                    _vm._v(" "),
-                    _c(
-                      "td",
-                      [
-                        _c(
-                          "router-link",
-                          {
-                            staticClass: "btn btn-xs btn-default",
-                            attrs: {
-                              to: {
-                                name: "editReminder",
-                                params: { id: reminder.id }
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Edit\n                        "
+                  return _c(
+                    "tr",
+                    { key: reminder.id },
+                    [
+                      reminder.isSecret == false
+                        ? [
+                            _c("td", [_vm._v(_vm._s(reminder.title))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(reminder.amount))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    target: "_blank",
+                                    href: reminder.urlLoc
+                                  }
+                                },
+                                [_vm._v(_vm._s(reminder.location))]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(reminder.alarmDate) +
+                                  " - " +
+                                  _vm._s(reminder.alarmTime)
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "btn btn-xs btn-default",
+                                    attrs: {
+                                      to: {
+                                        name: "editReminder",
+                                        params: { id: reminder.id }
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                Edit\n                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-xs btn-danger",
+                                    attrs: {
+                                      href: "#",
+                                      "data-toggle": "modal",
+                                      "data-target": "#myModalDelete"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.setValues(reminder.id, index)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                Delete\n                            "
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
                             )
                           ]
-                        ),
-                        _vm._v(" "),
-                        _c(
-                          "a",
-                          {
-                            staticClass: "btn btn-xs btn-danger",
-                            attrs: {
-                              href: "#",
-                              "data-toggle": "modal",
-                              "data-target": "#myModalDelete"
-                            },
-                            on: {
-                              click: function($event) {
-                                _vm.setValues(reminder.id, index)
-                              }
-                            }
-                          },
-                          [
-                            _vm._v(
-                              "\n                            Delete\n                        "
-                            )
-                          ]
-                        )
-                      ],
-                      1
-                    )
-                  ])
+                        : _vm._e()
+                    ],
+                    2
+                  )
                 })
               )
             ])
@@ -56972,6 +56988,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     data: function data() {
@@ -56984,11 +57010,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 amount: null,
                 location: null,
                 urlLoc: null,
+                contact: null,
                 frecuency: 'Once',
                 repeat: false,
                 alarmDate: null,
                 alarmTime: '',
-                deleteIt: false
+                secEmail: null,
+                archiveIt: true,
+                isSecret: false
             },
             category: {
                 userId: '',
@@ -57001,7 +57030,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {
         var d = new Date();
-        var currentDate = d.getFullYear().toString() + "-" + (d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1) + "-" + d.getDate();
+        var currentDate = d.getFullYear().toString() + "-" + (d.getMonth() + 1 < 10 ? "0" + (d.getMonth() + 1) : d.getMonth() + 1) + "-" + (d.getDate() < 10 ? "0" + d.getDate() : d.getDate());
 
         var app = this;
         app.reminder.alarmDate = currentDate;
@@ -57014,6 +57043,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $.notify("Could not load categories", "warn");
             $.notify("Refresh the current page", "info");
         });
+
+        // Secret reminder
+        var timeoutId = 0;
+
+        $('#myElement').on('mousedown', function () {
+            timeoutId = setTimeout(switchSecret, 4000);
+        }).on('mouseup mouseleave', function () {
+            clearTimeout(timeoutId);
+        });
+
+        function switchSecret() {
+            if (app.reminder.isSecret == false) {
+                app.reminder.isSecret = true;
+                $.notify("Understood", "success");
+            } else {
+                app.reminder.isSecret = false;
+                $.notify("Rollback!", "info");
+            }
+        }
+        // END
     },
 
     methods: {
@@ -57275,9 +57324,11 @@ var render = function() {
           [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-7 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Reminder title")
-                ]),
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { id: "myElement" } },
+                  [_vm._v("Reminder title")]
+                ),
                 _vm._v(" "),
                 _c("input", {
                   directives: [
@@ -57522,6 +57573,62 @@ var render = function() {
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
+                  _vm._v("Contact Number")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reminder.contact,
+                      expression: "reminder.contact"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "tel" },
+                  domProps: { value: _vm.reminder.contact },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.reminder, "contact", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
+                _c("label", { staticClass: "control-label" }, [_vm._v("CC")]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reminder.secEmail,
+                      expression: "reminder.secEmail"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "email" },
+                  domProps: { value: _vm.reminder.secEmail },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.reminder, "secEmail", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-12 form-group" }, [
+                _c("label", { staticClass: "control-label" }, [
                   _vm._v("Repeat")
                 ]),
                 _vm._v(" "),
@@ -57665,7 +57772,7 @@ var render = function() {
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-12 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Delete it when finished?")
+                  _vm._v("Archive it when finished?")
                 ]),
                 _vm._v(" "),
                 _c("input", {
@@ -57673,34 +57780,35 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.reminder.deleteIt,
-                      expression: "reminder.deleteIt"
+                      value: _vm.reminder.archiveIt,
+                      expression: "reminder.archiveIt"
                     }
                   ],
                   attrs: { type: "checkbox" },
                   domProps: {
-                    checked: Array.isArray(_vm.reminder.deleteIt)
-                      ? _vm._i(_vm.reminder.deleteIt, null) > -1
-                      : _vm.reminder.deleteIt
+                    checked: Array.isArray(_vm.reminder.archiveIt)
+                      ? _vm._i(_vm.reminder.archiveIt, null) > -1
+                      : _vm.reminder.archiveIt
                   },
                   on: {
                     change: function($event) {
-                      var $$a = _vm.reminder.deleteIt,
+                      var $$a = _vm.reminder.archiveIt,
                         $$el = $event.target,
                         $$c = $$el.checked ? true : false
                       if (Array.isArray($$a)) {
                         var $$v = null,
                           $$i = _vm._i($$a, $$v)
                         if ($$el.checked) {
-                          $$i < 0 && (_vm.reminder.deleteIt = $$a.concat([$$v]))
+                          $$i < 0 &&
+                            (_vm.reminder.archiveIt = $$a.concat([$$v]))
                         } else {
                           $$i > -1 &&
-                            (_vm.reminder.deleteIt = $$a
+                            (_vm.reminder.archiveIt = $$a
                               .slice(0, $$i)
                               .concat($$a.slice($$i + 1)))
                         }
                       } else {
-                        _vm.$set(_vm.reminder, "deleteIt", $$c)
+                        _vm.$set(_vm.reminder, "archiveIt", $$c)
                       }
                     }
                   }
