@@ -22,11 +22,14 @@ class CreateRemindersTable extends Migration
             $table->double('amount')->nullable();
             $table->string('location', 1000)->nullable();
             $table->string('urlLoc', 2000)->nullable();
+            $table->string('contact', 15)->nullable();
             $table->string('frecuency', 256);
             $table->boolean('repeat');
             $table->date('alarmDate')->nullable();
             $table->time('alarmTime');
-            $table->boolean('deleteIt');
+            $table->string('secEmail', 256)->nullable();
+            $table->boolean('archiveIt');
+            $table->boolean('isSecret');
             $table->timestamps();
             $table->foreign('category')->references('id')->on('categories');
             $table->foreign('userId')->references('id')->on('users');

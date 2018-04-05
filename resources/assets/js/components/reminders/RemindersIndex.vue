@@ -47,20 +47,22 @@
                     </thead>
                     <tbody>
                     <tr v-for="(reminder, index) in reminders" :key="reminder.id">
-                        <td>{{ reminder.title }}</td>
-                        <td>{{ reminder.amount }}</td>
-                        <td><a target="_blank" v-bind:href="reminder.urlLoc">{{ reminder.location }}</a></td>
-                        <td>{{ reminder.alarmDate }} - {{ reminder.alarmTime }}</td>
-                        <td>
-                            <router-link :to="{name: 'editReminder', params: {id: reminder.id}}" class="btn btn-xs btn-default">
-                                Edit
-                            </router-link>
-                            <a href="#"
-                               class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete"
-                               v-on:click="setValues(reminder.id, index)">
-                                Delete
-                            </a>
-                        </td>
+                        <template v-if="reminder.isSecret == false">
+                            <td>{{ reminder.title }}</td>
+                            <td>{{ reminder.amount }}</td>
+                            <td><a target="_blank" v-bind:href="reminder.urlLoc">{{ reminder.location }}</a></td>
+                            <td>{{ reminder.alarmDate }} - {{ reminder.alarmTime }}</td>
+                            <td>
+                                <router-link :to="{name: 'editReminder', params: {id: reminder.id}}" class="btn btn-xs btn-default">
+                                    Edit
+                                </router-link>
+                                <a href="#"
+                                class="btn btn-xs btn-danger" data-toggle="modal" data-target="#myModalDelete"
+                                v-on:click="setValues(reminder.id, index)">
+                                    Delete
+                                </a>
+                            </td>
+                        </template>
                     </tr>
                     </tbody>
                 </table>

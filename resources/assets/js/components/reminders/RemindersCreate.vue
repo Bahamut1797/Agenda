@@ -66,7 +66,7 @@
                 <form v-on:submit.prevent="saveForm()">
                     <div class="row">
                         <div class="col-xs-7 form-group">
-                            <label class="control-label">Reminder title</label>
+                            <label id="myElement" class="control-label">Reminder title</label>
                             <input type="text" required v-model="reminder.title" class="form-control">
                         </div>
                         <div class="col-xs-5 form-group">
@@ -102,6 +102,16 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6 form-group">
+                            <label class="control-label">Contact Number</label>
+                            <input type="tel" v-model="reminder.contact" class="form-control">
+                        </div>
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label">CC</label>
+                            <input type="email" v-model="reminder.secEmail" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-12 form-group">
                             <label class="control-label">Repeat</label>
                             <input type="checkbox" v-model="reminder.repeat">
                         </div>
@@ -124,8 +134,8 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Delete it when finished?</label>
-                            <input type="checkbox" v-model="reminder.deleteIt">
+                            <label class="control-label">Archive it when finished?</label>
+                            <input type="checkbox" v-model="reminder.archiveIt">
                         </div>
                     </div>
                     <div class="row">
@@ -151,11 +161,14 @@
                     amount: null,
                     location: null,
                     urlLoc: null,
+                    contact: null,
                     frecuency: 'Once',
                     repeat: false,
                     alarmDate: null,
                     alarmTime: '',
-                    deleteIt: false,
+                    secEmail: null,
+                    archiveIt: true,
+                    isSecret: false,
                 },
                 category: {
                     userId: '',
@@ -168,7 +181,7 @@
         },
         mounted() {
             var d = new Date();
-            var currentDate = d.getFullYear().toString() + "-" + ((d.getMonth()+1 < 10) ? ("0" + (d.getMonth()+1)) : (d.getMonth()+1)) + "-" + d.getDate();
+            var currentDate = d.getFullYear().toString() + "-" + ((d.getMonth()+1 < 10) ? ("0" + (d.getMonth()+1)) : (d.getMonth()+1)) + "-" + ((d.getDate() < 10) ? ("0" + d.getDate()) : d.getDate());
 
             var app = this;
             app.reminder.alarmDate = currentDate;
@@ -183,6 +196,26 @@
                     $.notify("Could not load categories", "warn");
                     $.notify("Refresh the current page", "info");
                 });
+
+            // Secret reminder
+            var timeoutId = 0;
+
+            $('#myElement').on('mousedown', function() {
+                timeoutId = setTimeout(switchSecret, 4000);
+            }).on('mouseup mouseleave', function() {
+                clearTimeout(timeoutId);
+            });
+
+            function switchSecret() {
+                if (app.reminder.isSecret == false) {
+                    app.reminder.isSecret = true;
+                    $.notify("Understood", "success");
+                } else {
+                    app.reminder.isSecret = false;
+                    $.notify("Rollback!", "info");
+                }
+            }
+            // END
         },
         methods: {
             saveForm() {
