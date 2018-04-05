@@ -25,11 +25,11 @@
         </div>
 
         <div class="form-group">
-            <router-link :to="{name: 'createReminder'}" class="btn btn-success">Create new reminder</router-link>
+            <router-link :to="{name: 'remindersIndex'}" class="btn btn-danger">Back</router-link>
         </div>
  
         <div class="panel panel-default">
-            <div id="myElement" class="panel-heading">Reminder list</div>
+            <div class="panel-heading"><img src="/open-iconic/svg/eye.svg" width="15" alt="secret"/> Reminder list</div>
             <div class="panel-body">
                 <div v-if="loading">
                     <img src="/imgs/loader.gif"/>
@@ -47,7 +47,7 @@
                     </thead>
                     <tbody>
                     <tr v-for="(reminder, index) in reminders" :key="reminder.id">
-                        <template v-if="reminder.isSecret == false">
+                        <template v-if="reminder.isSecret == true">
                             <td>{{ reminder.title }}</td>
                             <td>{{ reminder.amount }}</td>
                             <td><a target="_blank" v-bind:href="reminder.urlLoc">{{ reminder.location }}</a></td>
@@ -95,21 +95,6 @@
                     $.notify("Could not load reminders", "error");
                     app.loading = false;
                 });
-            
-            // Secret reminder
-            var timeoutId = 0;
-
-            $('#myElement').on('mousedown', function() {
-                timeoutId = setTimeout(goToSecret, 3000);
-            }).on('mouseup mouseleave', function() {
-                clearTimeout(timeoutId);
-            });
-
-            function goToSecret() {
-                $.notify("Shhh!", "info");
-                app.$router.push({name: 'remindersSecret'});
-            }
-            // END
         },
         methods: {
             setValues(id, index) {

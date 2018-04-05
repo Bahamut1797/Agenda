@@ -103,11 +103,11 @@
                     <div class="row">
                         <div class="col-xs-6 form-group">
                             <label class="control-label">Contact Number</label>
-                            <input type="tel" v-model="reminder.contact" class="form-control">
+                            <input type="tel" v-model="reminder.contact" class="form-control" placeholder="+525512345678">
                         </div>
                         <div class="col-xs-6 form-group">
-                            <label class="control-label">CC</label>
-                            <input type="email" v-model="reminder.secEmail" class="form-control">
+                            <label class="control-label">CC (Email)</label>
+                            <input type="email" v-model="reminder.secEmail" class="form-control" placeholder="example@domain.com">
                         </div>
                     </div>
                     <div class="row">
@@ -201,7 +201,7 @@
             var timeoutId = 0;
 
             $('#myElement').on('mousedown', function() {
-                timeoutId = setTimeout(switchSecret, 4000);
+                timeoutId = setTimeout(switchSecret, 3000);
             }).on('mouseup mouseleave', function() {
                 clearTimeout(timeoutId);
             });

@@ -14660,10 +14660,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_vue_router__ = __webpack_require__(255);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersIndex_vue__ = __webpack_require__(256);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersIndex_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersIndex_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersCreate_vue__ = __webpack_require__(259);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersCreate_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersCreate_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersEdit_vue__ = __webpack_require__(262);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersEdit_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersEdit_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersSecret_vue__ = __webpack_require__(275);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersSecret_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersSecret_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersCreate_vue__ = __webpack_require__(259);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersCreate_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersCreate_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_reminders_RemindersEdit_vue__ = __webpack_require__(262);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_reminders_RemindersEdit_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_reminders_RemindersEdit_vue__);
 
 /**
  * First we will load all of this project's JavaScript dependencies which
@@ -14695,12 +14697,21 @@ window.Vue.use(__WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]);
 
 
 
+
+var text = "/";
+var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+for (var i = 0; i < 11; i++) {
+  text += possible.charAt(Math.floor(Math.random() * possible.length));
+}
+
 var routes = [{
   path: '/',
   components: {
     remindersIndex: __WEBPACK_IMPORTED_MODULE_2__components_reminders_RemindersIndex_vue___default.a
-  }
-}, { path: '/create', component: __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersCreate_vue___default.a, name: 'createReminder' }, { path: '/edit/:id', component: __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersEdit_vue___default.a, name: 'editReminder' }];
+  },
+  name: 'remindersIndex'
+}, { path: text, component: __WEBPACK_IMPORTED_MODULE_3__components_reminders_RemindersSecret_vue___default.a, name: 'remindersSecret' }, { path: '/create', component: __WEBPACK_IMPORTED_MODULE_4__components_reminders_RemindersCreate_vue___default.a, name: 'createReminder' }, { path: text + '/edit/:id', component: __WEBPACK_IMPORTED_MODULE_5__components_reminders_RemindersEdit_vue___default.a, name: 'editReminder' }];
 
 var router = new __WEBPACK_IMPORTED_MODULE_1_vue_router__["a" /* default */]({ routes: routes });
 
@@ -56524,6 +56535,21 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $.notify("Could not load reminders", "error");
             app.loading = false;
         });
+
+        // Secret reminder
+        var timeoutId = 0;
+
+        $('#myElement').on('mousedown', function () {
+            timeoutId = setTimeout(goToSecret, 3000);
+        }).on('mouseup mouseleave', function () {
+            clearTimeout(timeoutId);
+        });
+
+        function goToSecret() {
+            $.notify("Shhh!", "info");
+            app.$router.push({ name: 'remindersSecret' });
+        }
+        // END
     },
 
     methods: {
@@ -56636,7 +56662,9 @@ var render = function() {
     ),
     _vm._v(" "),
     _c("div", { staticClass: "panel panel-default" }, [
-      _c("div", { staticClass: "panel-heading" }, [_vm._v("Reminder list")]),
+      _c("div", { staticClass: "panel-heading", attrs: { id: "myElement" } }, [
+        _vm._v("Reminder list")
+      ]),
       _vm._v(" "),
       _c("div", { staticClass: "panel-body" }, [
         _vm.loading
@@ -57048,7 +57076,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         var timeoutId = 0;
 
         $('#myElement').on('mousedown', function () {
-            timeoutId = setTimeout(switchSecret, 4000);
+            timeoutId = setTimeout(switchSecret, 3000);
         }).on('mouseup mouseleave', function () {
             clearTimeout(timeoutId);
         });
@@ -57586,7 +57614,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { type: "tel" },
+                  attrs: { type: "tel", placeholder: "+525512345678" },
                   domProps: { value: _vm.reminder.contact },
                   on: {
                     input: function($event) {
@@ -57600,7 +57628,9 @@ var render = function() {
               ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-xs-6 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [_vm._v("CC")]),
+                _c("label", { staticClass: "control-label" }, [
+                  _vm._v("CC (Email)")
+                ]),
                 _vm._v(" "),
                 _c("input", {
                   directives: [
@@ -57612,7 +57642,7 @@ var render = function() {
                     }
                   ],
                   staticClass: "form-control",
-                  attrs: { type: "email" },
+                  attrs: { type: "email", placeholder: "example@domain.com" },
                   domProps: { value: _vm.reminder.secEmail },
                   on: {
                     input: function($event) {
@@ -58087,6 +58117,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
     mounted: function mounted() {
@@ -58107,6 +58147,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             $.notify("Could not load categories", "warn");
             $.notify("Refresh the current page", "info");
         });
+
+        // Secret reminder
+        var timeoutId = 0;
+
+        $('#myElement').on('mousedown', function () {
+            timeoutId = setTimeout(switchSecret, 3000);
+        }).on('mouseup mouseleave', function () {
+            clearTimeout(timeoutId);
+        });
+
+        function switchSecret() {
+            if (app.reminder.isSecret == false) {
+                app.reminder.isSecret = true;
+                $.notify("Understood", "success");
+            } else {
+                app.reminder.isSecret = false;
+                $.notify("Rollback!", "info");
+            }
+        }
+        // END
     },
 
     data: function data() {
@@ -58115,15 +58175,19 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             reminder: {
                 userId: '',
                 title: '',
+                category: 1,
                 isPayment: false,
                 amount: null,
                 location: null,
                 urlLoc: null,
-                frecuency: '',
+                contact: null,
+                frecuency: 'Once',
                 repeat: false,
                 alarmDate: null,
                 alarmTime: '',
-                deleteIt: false
+                secEmail: null,
+                archiveIt: true,
+                isSecret: false
             },
             category: {
                 userId: '',
@@ -58299,9 +58363,11 @@ var render = function() {
           [
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-7 form-group" }, [
-                _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Reminder title")
-                ]),
+                _c(
+                  "label",
+                  { staticClass: "control-label", attrs: { id: "myElement" } },
+                  [_vm._v("Reminder title")]
+                ),
                 _vm._v(" "),
                 _c("input", {
                   directives: [
@@ -58515,6 +58581,64 @@ var render = function() {
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-6 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
+                  _vm._v("Contact Number")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reminder.contact,
+                      expression: "reminder.contact"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "tel", placeholder: "+525512345678" },
+                  domProps: { value: _vm.reminder.contact },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.reminder, "contact", $event.target.value)
+                    }
+                  }
+                })
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
+                _c("label", { staticClass: "control-label" }, [
+                  _vm._v("CC (Email)")
+                ]),
+                _vm._v(" "),
+                _c("input", {
+                  directives: [
+                    {
+                      name: "model",
+                      rawName: "v-model",
+                      value: _vm.reminder.secEmail,
+                      expression: "reminder.secEmail"
+                    }
+                  ],
+                  staticClass: "form-control",
+                  attrs: { type: "email", placeholder: "example@domain.com" },
+                  domProps: { value: _vm.reminder.secEmail },
+                  on: {
+                    input: function($event) {
+                      if ($event.target.composing) {
+                        return
+                      }
+                      _vm.$set(_vm.reminder, "secEmail", $event.target.value)
+                    }
+                  }
+                })
+              ])
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "row" }, [
+              _c("div", { staticClass: "col-xs-6 form-group" }, [
+                _c("label", { staticClass: "control-label" }, [
                   _vm._v("Repeat")
                 ]),
                 _vm._v(" "),
@@ -58658,7 +58782,7 @@ var render = function() {
             _c("div", { staticClass: "row" }, [
               _c("div", { staticClass: "col-xs-12 form-group" }, [
                 _c("label", { staticClass: "control-label" }, [
-                  _vm._v("Delete it when finished?")
+                  _vm._v("Archive it when finished?")
                 ]),
                 _vm._v(" "),
                 _c("input", {
@@ -58666,34 +58790,35 @@ var render = function() {
                     {
                       name: "model",
                       rawName: "v-model",
-                      value: _vm.reminder.deleteIt,
-                      expression: "reminder.deleteIt"
+                      value: _vm.reminder.archiveIt,
+                      expression: "reminder.archiveIt"
                     }
                   ],
                   attrs: { type: "checkbox" },
                   domProps: {
-                    checked: Array.isArray(_vm.reminder.deleteIt)
-                      ? _vm._i(_vm.reminder.deleteIt, null) > -1
-                      : _vm.reminder.deleteIt
+                    checked: Array.isArray(_vm.reminder.archiveIt)
+                      ? _vm._i(_vm.reminder.archiveIt, null) > -1
+                      : _vm.reminder.archiveIt
                   },
                   on: {
                     change: function($event) {
-                      var $$a = _vm.reminder.deleteIt,
+                      var $$a = _vm.reminder.archiveIt,
                         $$el = $event.target,
                         $$c = $$el.checked ? true : false
                       if (Array.isArray($$a)) {
                         var $$v = null,
                           $$i = _vm._i($$a, $$v)
                         if ($$el.checked) {
-                          $$i < 0 && (_vm.reminder.deleteIt = $$a.concat([$$v]))
+                          $$i < 0 &&
+                            (_vm.reminder.archiveIt = $$a.concat([$$v]))
                         } else {
                           $$i > -1 &&
-                            (_vm.reminder.deleteIt = $$a
+                            (_vm.reminder.archiveIt = $$a
                               .slice(0, $$i)
                               .concat($$a.slice($$i + 1)))
                         }
                       } else {
-                        _vm.$set(_vm.reminder, "deleteIt", $$c)
+                        _vm.$set(_vm.reminder, "archiveIt", $$c)
                       }
                     }
                   }
@@ -58788,6 +58913,444 @@ if (false) {
 /***/ (function(module, exports) {
 
 // removed by extract-text-webpack-plugin
+
+/***/ }),
+/* 266 */,
+/* 267 */,
+/* 268 */,
+/* 269 */,
+/* 270 */,
+/* 271 */,
+/* 272 */,
+/* 273 */,
+/* 274 */,
+/* 275 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var disposed = false
+var normalizeComponent = __webpack_require__(9)
+/* script */
+var __vue_script__ = __webpack_require__(276)
+/* template */
+var __vue_template__ = __webpack_require__(277)
+/* template functional */
+var __vue_template_functional__ = false
+/* styles */
+var __vue_styles__ = null
+/* scopeId */
+var __vue_scopeId__ = null
+/* moduleIdentifier (server only) */
+var __vue_module_identifier__ = null
+var Component = normalizeComponent(
+  __vue_script__,
+  __vue_template__,
+  __vue_template_functional__,
+  __vue_styles__,
+  __vue_scopeId__,
+  __vue_module_identifier__
+)
+Component.options.__file = "resources\\assets\\js\\components\\reminders\\RemindersSecret.vue"
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7113224f", Component.options)
+  } else {
+    hotAPI.reload("data-v-7113224f", Component.options)
+  }
+  module.hot.dispose(function (data) {
+    disposed = true
+  })
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 276 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+/* harmony default export */ __webpack_exports__["default"] = ({
+    data: function data() {
+        return {
+            reminders: [],
+            loading: false,
+            reminderTitle: '',
+            reminderId: 0,
+            reminderIndex: ''
+        };
+    },
+    mounted: function mounted() {
+        var app = this;
+        app.loading = true;
+        axios.get('/api/v1/reminders').then(function (resp) {
+            app.loading = false;
+            app.reminders = resp.data;
+        }).catch(function (resp) {
+            console.log(resp);
+            $.notify("Could not load reminders", "error");
+            app.loading = false;
+        });
+    },
+
+    methods: {
+        setValues: function setValues(id, index) {
+            var app = this;
+            app.reminderId = id;
+            app.reminderIndex = index;
+            app.reminderTitle = app.reminders[index].title;
+        },
+        deleteEntry: function deleteEntry() {
+            var app = this;
+            axios.delete('/api/v1/reminders/' + app.reminderId).then(function (resp) {
+                $.notify("Reminder deleted", "success");
+                app.reminders.splice(app.reminderIndex, 1);
+                $('#myModalDelete').modal('hide');
+            }).catch(function (resp) {
+                $.notify("Could not delete reminder", "error");
+                $('#myModalDelete').modal('hide');
+            });
+        }
+    }
+});
+
+/***/ }),
+/* 277 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c(
+      "div",
+      {
+        staticClass: "modal fade",
+        attrs: {
+          id: "myModalDelete",
+          tabindex: "-1",
+          role: "dialog",
+          "aria-labelledby": "myModalLabel"
+        }
+      },
+      [
+        _c(
+          "div",
+          { staticClass: "modal-dialog", attrs: { role: "document" } },
+          [
+            _c("div", { staticClass: "modal-content" }, [
+              _vm._m(0),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-body" }, [
+                _c("span", [
+                  _vm._v("Do you really want to delete "),
+                  _c("b", [_vm._v('"' + _vm._s(_vm.reminderTitle) + '"')]),
+                  _vm._v(" reminder?")
+                ])
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "modal-footer" }, [
+                _c(
+                  "button",
+                  {
+                    staticClass: "btn btn-default",
+                    attrs: { type: "button", "data-dismiss": "modal" }
+                  },
+                  [_vm._v("Cancel")]
+                ),
+                _vm._v(" "),
+                _c("span", { staticClass: "pull-right" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-danger",
+                      attrs: { type: "button" },
+                      on: {
+                        click: function($event) {
+                          _vm.deleteEntry()
+                        }
+                      }
+                    },
+                    [
+                      _vm._v(
+                        "\n                            Continue\n                        "
+                      )
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ]
+        )
+      ]
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "form-group" },
+      [
+        _c(
+          "router-link",
+          {
+            staticClass: "btn btn-danger",
+            attrs: { to: { name: "remindersIndex" } }
+          },
+          [_vm._v("Back")]
+        )
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c("div", { staticClass: "panel panel-default" }, [
+      _vm._m(1),
+      _vm._v(" "),
+      _c("div", { staticClass: "panel-body" }, [
+        _vm.loading
+          ? _c("div", [
+              _c("img", { attrs: { src: "/imgs/loader.gif" } }),
+              _vm._v("\n                Loading.....\n            ")
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        !_vm.loading
+          ? _c("table", { staticClass: "table table-bordered table-striped" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _c(
+                "tbody",
+                _vm._l(_vm.reminders, function(reminder, index) {
+                  return _c(
+                    "tr",
+                    { key: reminder.id },
+                    [
+                      reminder.isSecret == true
+                        ? [
+                            _c("td", [_vm._v(_vm._s(reminder.title))]),
+                            _vm._v(" "),
+                            _c("td", [_vm._v(_vm._s(reminder.amount))]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _c(
+                                "a",
+                                {
+                                  attrs: {
+                                    target: "_blank",
+                                    href: reminder.urlLoc
+                                  }
+                                },
+                                [_vm._v(_vm._s(reminder.location))]
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c("td", [
+                              _vm._v(
+                                _vm._s(reminder.alarmDate) +
+                                  " - " +
+                                  _vm._s(reminder.alarmTime)
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "td",
+                              [
+                                _c(
+                                  "router-link",
+                                  {
+                                    staticClass: "btn btn-xs btn-default",
+                                    attrs: {
+                                      to: {
+                                        name: "editReminder",
+                                        params: { id: reminder.id }
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                Edit\n                            "
+                                    )
+                                  ]
+                                ),
+                                _vm._v(" "),
+                                _c(
+                                  "a",
+                                  {
+                                    staticClass: "btn btn-xs btn-danger",
+                                    attrs: {
+                                      href: "#",
+                                      "data-toggle": "modal",
+                                      "data-target": "#myModalDelete"
+                                    },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.setValues(reminder.id, index)
+                                      }
+                                    }
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                                Delete\n                            "
+                                    )
+                                  ]
+                                )
+                              ],
+                              1
+                            )
+                          ]
+                        : _vm._e()
+                    ],
+                    2
+                  )
+                })
+              )
+            ])
+          : _vm._e()
+      ])
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "modal-header" }, [
+      _c(
+        "button",
+        {
+          staticClass: "close",
+          attrs: {
+            type: "button",
+            "data-dismiss": "modal",
+            "aria-label": "Close"
+          }
+        },
+        [_c("span", { attrs: { "aria-hidden": "true" } }, [_vm._v("×")])]
+      ),
+      _vm._v(" "),
+      _c("h4", { staticClass: "modal-title", attrs: { id: "myModalLabel" } }, [
+        _vm._v("Delete Reminder")
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "panel-heading" }, [
+      _c("img", {
+        attrs: { src: "/open-iconic/svg/eye.svg", width: "15", alt: "secret" }
+      }),
+      _vm._v(" Reminder list")
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("th", { staticClass: "col-xs-3" }, [_vm._v("Title")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-xs-1" }, [_vm._v("Amount")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-xs-4" }, [_vm._v("Location")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-xs-3" }, [_vm._v("Alarm Date")]),
+        _vm._v(" "),
+        _c("th", { staticClass: "col-xs-1" }, [_vm._v(" ")])
+      ])
+    ])
+  }
+]
+render._withStripped = true
+module.exports = { render: render, staticRenderFns: staticRenderFns }
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+    require("vue-hot-reload-api")      .rerender("data-v-7113224f", module.exports)
+  }
+}
 
 /***/ })
 /******/ ]);

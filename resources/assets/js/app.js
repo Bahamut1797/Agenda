@@ -26,18 +26,28 @@ import VueRouter from 'vue-router';
 window.Vue.use(VueRouter);
  
 import RemindersIndex from './components/reminders/RemindersIndex.vue';
+import RemindersSecret from './components/reminders/RemindersSecret.vue';
 import RemindersCreate from './components/reminders/RemindersCreate.vue';
 import RemindersEdit from './components/reminders/RemindersEdit.vue';
+
+var text = "/";
+var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+  
+for (var i = 0; i < 11; i++){
+    text += possible.charAt(Math.floor(Math.random() * possible.length));
+}
  
 const routes = [
     {
         path: '/',
         components: {
             remindersIndex: RemindersIndex
-        }
+        },
+        name: 'remindersIndex'
     },
+    {path: text, component: RemindersSecret, name: 'remindersSecret'},
     {path: '/create', component: RemindersCreate, name: 'createReminder'},
-    {path: '/edit/:id', component: RemindersEdit, name: 'editReminder'},
+    {path: text + '/edit/:id', component: RemindersEdit, name: 'editReminder'},
 ]
  
 const router = new VueRouter({ routes })

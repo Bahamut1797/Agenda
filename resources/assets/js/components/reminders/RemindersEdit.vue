@@ -41,7 +41,7 @@
                 <form v-on:submit.prevent="saveForm()">
                     <div class="row">
                         <div class="col-xs-7 form-group">
-                            <label class="control-label">Reminder title</label>
+                            <label id="myElement" class="control-label">Reminder title</label>
                             <input type="text" required v-model="reminder.title" class="form-control">
                         </div>
                         <div class="col-xs-5 form-group">
@@ -74,6 +74,16 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-6 form-group">
+                            <label class="control-label">Contact Number</label>
+                            <input type="tel" v-model="reminder.contact" class="form-control" placeholder="+525512345678">
+                        </div>
+                        <div class="col-xs-6 form-group">
+                            <label class="control-label">CC (Email)</label>
+                            <input type="email" v-model="reminder.secEmail" class="form-control" placeholder="example@domain.com">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-xs-6 form-group">
                             <label class="control-label">Repeat</label>
                             <input type="checkbox" v-model="reminder.repeat">
                         </div>
@@ -96,8 +106,8 @@
                     </div>
                     <div class="row">
                         <div class="col-xs-12 form-group">
-                            <label class="control-label">Delete it when finished?</label>
-                            <input type="checkbox" v-model="reminder.deleteIt">
+                            <label class="control-label">Archive it when finished?</label>
+                            <input type="checkbox" v-model="reminder.archiveIt">
                         </div>
                     </div>
                     <div class="row">
@@ -135,6 +145,26 @@
                     $.notify("Could not load categories", "warn");
                     $.notify("Refresh the current page", "info");
                 });
+
+            // Secret reminder
+            var timeoutId = 0;
+
+            $('#myElement').on('mousedown', function() {
+                timeoutId = setTimeout(switchSecret, 3000);
+            }).on('mouseup mouseleave', function() {
+                clearTimeout(timeoutId);
+            });
+
+            function switchSecret() {
+                if (app.reminder.isSecret == false) {
+                    app.reminder.isSecret = true;
+                    $.notify("Understood", "success");
+                } else {
+                    app.reminder.isSecret = false;
+                    $.notify("Rollback!", "info");
+                }
+            }
+            // END
         },
         data: function () {
             return {
@@ -142,15 +172,19 @@
                 reminder: {
                     userId: '',
                     title: '',
+                    category: 1,
                     isPayment: false,
                     amount: null,
                     location: null,
                     urlLoc: null,
-                    frecuency: '',
+                    contact: null,
+                    frecuency: 'Once',
                     repeat: false,
                     alarmDate: null,
                     alarmTime: '',
-                    deleteIt: false,
+                    secEmail: null,
+                    archiveIt: true,
+                    isSecret: false,
                 },
                 category: {
                     userId: '',
