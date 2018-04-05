@@ -1,0 +1,1 @@
+php C:\\Users\\ruizjl\\LaravelProyects\\Agenda\\artisan schedule:run
