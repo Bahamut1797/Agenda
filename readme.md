@@ -5,15 +5,17 @@ Agenda is like its name says, it will store reminders for you and it advise you 
 
 *It still be in development, so if you want to try it, you will need to **configure** your environment and the **.env** file.*
 
+*In this guide you''ll configure a crontab beacuse is needed to send emails, also the DB driver used is MySQL server 5.7*
+
 ## Features
 
-- Create, delete or modify reminders [**Still in development certain functionality**].
+- Create, delete or modify reminders, you can set a date and time, if is a payment and how much do you pay, add a location and information contact [**Still in development certain functionality**].
 - Archive reminders
 - Advise you via email when set time end.
 - [**Still in development**] Create your own category to group your reminders.
 - Uses [Google Maps Api](https://developers.google.com/maps/web/) to help you autocomplete a location.
 - Send a confirmation token via email to register a new user.
-- [**Soon**] Make charts about how much do you pay for in certain period.
+- [**Soon**] Make charts about how much do you paid for in certain period.
 
 ## Setup
 
@@ -63,6 +65,12 @@ In the root Agenda project path, open command line and execute:
 
     php artisan key:generate
 
+### Create the DB
+
+Create a database called as same as the **DB_DATABASE** variable and execute the next command on the root project:
+
+    php artisan migrate
+
 ### Node.js dependencies
 
 Open your command line, go to your root Agenda project path and execute the next command to download all dependencies:
@@ -87,6 +95,6 @@ Open your command line, go to your root Agenda project path and execute the next
 
 ### Configure a cronjob or task scheduler
 
-Configure a cronjob in linux or a task scheduler to execute the nex command every minute:
+Configure a cronjob in linux or a task scheduler to execute the next command every minute:
 
     /path/to/php artisan schedule:run
