@@ -97,4 +97,4 @@ Open your command line, go to your root Agenda project path and execute the next
 
 Configure a cronjob in linux or a task scheduler to execute the next command every minute:
 
-    /path/to/php /path/tp/project/artisan schedule:run
+    /path/to/php /path/to/project/artisan schedule:run
