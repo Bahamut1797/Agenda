@@ -5,7 +5,7 @@ Agenda is like its name says, it will store reminders for you and it advise you 
 
 *It still be in development, so if you want to try it, you will need to **configure** your environment and the **.env** file.*
 
-*In this guide you''ll configure a crontab beacuse is needed to send emails, also the DB driver used is MySQL server 5.7*
+*In this guide you'll configure a crontab beacuse is needed to send emails, also the DB driver used is MySQL server 5.7*
 
 ## Features
 
@@ -97,4 +97,4 @@ Open your command line, go to your root Agenda project path and execute the next
 
 Configure a cronjob in linux or a task scheduler to execute the next command every minute:
 
-    /path/to/php artisan schedule:run
+    /path/to/php /path/tp/project/artisan schedule:run
